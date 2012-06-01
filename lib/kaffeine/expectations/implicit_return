@@ -1,0 +1,160 @@
+#arrow implicit_return
+
+compiles:
+function() {
+  x instanceof y
+}
+
+to: 
+function() { 
+  x instanceof y
+}
+
+compiles: 
+
+-> {
+  return x instanceof y
+}
+
+to: 
+
+function() { 
+  return x instanceof y
+}
+
+
+compiles: 
+function A() { 1*1+1 }
+
+to:
+function A() { 1*1+1 }
+
+compiles:
+
+
+-> {
+  return x * y
+}
+
+
+to:
+
+function() {
+  return x * y
+}
+
+compiles:
+function A() { 1 }
+to:
+function A() { 1 }
+
+compiles:
+-> {
+  ;1234;
+}
+to:
+function() {
+  ;return 1234;
+}
+
+  
+compiles:
+(-> {
+  {a: 1}  
+})()
+
+to:
+(function() {
+  return {a: 1}  
+})()
+
+compiles:
+-> {
+  if(false) {
+  } else {
+    1+1
+  }
+}
+to:
+function() {
+  if(false) {
+  } else {
+    1+1
+  }
+}
+compiles: 
+(-> {
+  (-> {123})
+})()()
+
+to:
+(function() {
+  return (function() {return 123})
+})()()
+
+compiles:
+-> {
+  if(true)
+     123
+}
+
+
+to: 
+function() {
+  if(true)
+     123
+}
+
+compiles:
+-> {
+  new K()
+}
+
+to: 
+function() {
+  return new K()
+}
+
+compiles:
+
+-> { return !x }  
+
+to:
+function() { return !x }  
+
+compiles:
+
+-> {
+gello
+!ch
+}
+
+to: 
+
+function() {
+return gello
+!ch
+}
+
+compiles:
+-> {
+  throw "hello"
+}
+
+to:
+function() {
+  throw "hello"
+}
+
+compiles: 
+
+-> {
+  return typeof step === 'string';
+}
+
+to: 
+
+function() { 
+  return typeof step === 'string';
+}
+

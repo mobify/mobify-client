@@ -1,0 +1,3 @@
+#using multiline_strings arrow scoper hash at brackets_for_keywords operators pre_pipe implicit_brackets extend_for prototype super implicit_return pipe bang default_args implicit_vars
+
+{>"*.tmpl"/}

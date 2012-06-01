@@ -1,0 +1,5 @@
+compiles:
+x | map -> { a * 11 } | detect -> { b*b > 30 }
+
+to:
+_.detect(_.map(x, function() { return a * 11 }), function() { return b*b > 30 })

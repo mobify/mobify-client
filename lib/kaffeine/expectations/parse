@@ -1,0 +1,8 @@
+compiles:
+for(i in X)
+  x
+y
+to:
+var i; for(i in X)
+  x
+y

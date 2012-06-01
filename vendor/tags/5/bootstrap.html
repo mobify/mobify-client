@@ -1,0 +1,165 @@
+<script type="text/javascript">
+/*<![CDATA[*/
+
+// 5.0.0 - Blitzkrieg witchcraft
+
+(function (window, document) {
+    var config = {tagVersion: '5.0.0'}
+      , openScriptTag = '<script class="mobify-skip"'
+      , closeScriptTag = '<\/script>'
+      , mobileRe = /ip(hone|od)|android.*(mobile)|blackberry.*applewebkit/i
+      , location = document.location
+
+        // Given `url` add the sync param. Unless it's already there.
+      , resolve = function(url, sync) {
+            return /[&?]sync=/.test(url)
+            ? url
+            : url + (/\?/.test(url) ? '&' : '?') + 'sync=' + sync;
+        }
+      
+      , write = function(s) {
+            document.write(s);  
+        }
+
+        // Use `document.write` to output a synchronous script `src`.
+      , writeScript = function(src) {
+            write(openScriptTag + ' src= "' + resolve(src, 's') + '">' + closeScriptTag);
+        }
+
+      , firstScript
+
+      , asyncScript = function(name, callback) {
+            var script = document.createElement('script');
+            script.className = 'mobify-skip';
+            script.src = resolve(name, 'a');
+            if (callback) {
+                script.onload = script.onerror = callback;
+            }
+            firstScript = firstScript || document.getElementsByTagName('script')[0];
+            firstScript.parentNode.insertBefore(script, firstScript);
+         }
+
+        // Check if we successfully loaded the API. If not, load the next file
+        // in `mobifyPath`. If no files worked, failed.
+      , loadPaths = function() {
+            if (!Mobify.unmobify) {
+                var path = Mobify.mobifyPaths.shift();
+
+                if (!path) {
+                    setCookie('mobify-js', 0);
+                    alert('Site error. Reload to try again.');
+                } else {
+                    asyncScript(path, loadPaths);
+                }
+            }
+        }
+
+        // Sets a cookie with `name` and `value`. Use falesy `expires` for
+        // session cookie.
+      , setCookie = function(name, value, expires) {
+            expires = expires 
+                ? '; expires=' + (new Date((new Date).getTime()
+                      + (1000 * 60 * 60 * 24 * expires))).toUTCString() 
+                : '';  
+            var result = name + '=' + value + '; path=/' + expires
+            document.cookie = result;
+         }
+
+
+    var Mobify = window.Mobify = window.Mobify || {
+        points: [+new Date]
+      , config: config
+      , writeScript: writeScript
+      , asyncScript: asyncScript
+      , loadPaths: loadPaths
+      , setCookie: setCookie
+
+        // If `mobify-override` hash is present, set cookies for whitelisted
+        // hashes. Allow unsetting by using blank values.
+        // #mobify-override&mobify-js=xxx&mobify-path=xxx&mobify-debug=xxx
+      , configure: function(opts) {
+            var whitelist = ['js', 'path', 'debug', 'flag\\\\w*']
+              , hash = location.hash
+              , key
+              , path
+              , match
+              , re;
+
+            for (key in opts) {
+                config[key] = opts[key];
+            }
+            
+            if (!!~hash.indexOf('mobify-override')) {
+                while (key = whitelist.pop()) {
+                    key = 'mobify-' + key;
+                    // re here looks kinad weird.
+                    for (re = new RegExp('&(' + key + ')=([^&;]*)', 'g');
+                          match = re.exec(hash);
+                    ) {
+                        setCookie(match[1], match[2], match[2] ? 7 : -1); 
+                    }
+                }
+            }
+
+            // If `path` was overridden, load all scripts through preview.
+            // Use `escape` to prevent attacks.
+            // ??? Why is the mobify-path regexp defined like this?
+            // //preview.mobify.com/<path>
+            // //preview.mobify.com///localhost:8080/src/mobify.js
+            if (path = /mobify-path=([^;]+)/i.exec(document.cookie)) {
+                config.path = location.protocol + '%(trust)s' + escape(path[1]);
+            } 
+
+            // `mobifyPaths` is a list of APIs to load.
+            var mobifyPaths = Mobify.mobifyPaths = [config.path].concat([
+                    '//cdn.mobify.com/un',
+                    '//files01.mobify.com/un'
+                ])
+              , i = mobifyPaths.length;
+            
+            while (i--) mobifyPaths[i] += 'mobify.js';
+        }
+
+         // Victory! Set the configuration path based on the escaped cookie
+      , go: function() {
+            loadPaths();
+            write('<plaintext class="mobify-grab" style="display:none">');
+        }
+        
+         // Defeat, leave the page alone by turning all snippet operations into noops.
+      , nogo: function() {
+            Mobify.snippet = function() {};
+        }
+
+        // JB: Mobify.snippet required anymore?
+        // We're just gonna kick it off on configure?
+        // Begin, continue or end escaping of the page.
+      , snippet: function() {
+            var detectFile = config.path + 'detect.js?role='
+              , match = /mobify-js=([\-0-9]+)/.exec(document.cookie);
+
+            // Mobile via cookie or user-agent.
+            if (match ? (+match[1] > 0) : mobileRe.test(navigator.userAgent)) {
+                Mobify.go();
+                asyncScript(detectFile + 'mobile');
+
+            // Desktop via cookie.
+            } else if (match && (+match[1] <= 0)) {
+                Mobify.nogo();
+                asyncScript(detectFile + 'desktop');
+            
+            // Unknown. Load `detect.js` to figure out whether to mobify.
+            // If `detect.js` fails, ignore our tags.
+            } else {
+                writeScript(detectFile + 'detect');
+                write(openScriptTag + '>Mobify.nogo()' + closeScriptTag);
+            }
+        }
+    };
+})(this, document);
+
+Mobify.configure(%(configure_opts)s);
+Mobify.snippet();
+
+/*]]>*/
+</script>

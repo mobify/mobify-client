@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen">
+	<script type="text/javascript" src="qunit/qunit.js"></script>  
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+</head>
+<body>
+    <!-- 
+
+    Validates the syntax of mobify.js tags.
+
+    Running:
+
+    1. Run `node tag-injector-test-server`.
+    2. Open http://127.0.0.1:3050/__/tags-test.html
+
+
+    Things to test with the tags:
+    # No errors on desktop/mobile browsers.
+    # Works on mobile browsers
+    # Preview works
+    # No way to inject badness.
+    # No unescaped globals.
+
+    -->
+    <h1 id="qunit-header">QUnit Test Suite</h1>  
+    <h2 id="qunit-banner"></h2>  
+    <div id="qunit-testrunner-toolbar"></div>  
+    <h2 id="qunit-userAgent"></h2>  
+    <ol id="qunit-tests"></ol>  
+
+    <h2>Version 3</h2>
+	<iframe src="fixtures-tags/tags.html?tagVersion=3"></iframe>
+	<h2>Version 4</h2>
+	<iframe src="fixtures-tags/tags.html?tagVersion=4"></iframe>
+    <h2>Version 5</h2>
+    <iframe src="fixtures-tags/tags.html?tagVersion=5"></iframe>
+
+
+	<script>
+		var counter = $('iframe').size();	
+
+		$('iframe').load(function() {
+			counter--;
+			if (!counter) runTests();
+		});
+
+		function runTests() {
+			// Detects syntax errors in:
+			// FireFox: 3.6+
+			// Safari: 5+ 
+			// Chrome: 17+
+			// Opera: ???
+			// IE: ???
+			// I expect you could check for an error popup.
+			test('Tag Syntax', function() {
+				$.each(window.frames, function() {
+					var msg;
+					var error = this.error;
+					if (error) msg = [].slice.call(error).join(',');
+					ok(error === undefined, msg);
+				});
+			});
+		}
+	</script>
+<body>
+</html>

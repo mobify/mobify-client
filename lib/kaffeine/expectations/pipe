@@ -1,0 +1,123 @@
+#arrow hash pre_pipe pipe implicit_return
+
+compiles: 
+
+@poly | times | map -> @create_proto()
+
+to:
+
+_.map(_.times(@poly), function() { return @create_proto() })
+
+compiles: 
+
+(@[key] = o.default | clone)
+
+to:
+
+(@[key] = _.clone(o.default))
+
+      
+compiles:
+klass.properties = klass.properties | clone | extend props
+
+
+to:
+klass.properties = _.extend(_.clone(klass.properties), props)
+
+compiles: 
+a | map x
+
+to:
+_.map(a, x)
+
+
+compiles:
+x | each -> {
+  a | map x
+}
+
+to:
+_.each(x, function() {
+  return _.map(a, x)
+})
+
+
+compiles:
+x | run | hide()
+
+to:
+_.hide(_.run(x))
+
+compiles:
+
+x | run() | hide()
+
+to:
+
+_.hide(_.run(x))
+
+
+
+compiles:
+a
+x |
+  detect -> {;}
+b  
+to:
+a
+_
+.detect(x, function() {;})
+b
+
+compiles:
+a
+x
+  | detect function() {;}
+b
+to:
+a
+
+_.detect(x, function() {;})
+b
+
+
+compiles:
+var x = [2] | map square
+to:
+var x = _.map([2], square)
+
+compiles:
+var x = [1,2,3,4,5,6,7] | map square | detect more_than_10
+to:
+var x = _.detect(_.map([1,2,3,4,5,6,7], square), more_than_10)
+
+compiles:
+a | map -> {
+  return arguments[0](x[3])
+}
+to:
+_.map(a, function() {
+  return arguments[0](x[3])
+})
+
+compiles:
+a | map -> {
+  return arguments[0](x[3])
+}
+to:
+_.map(a, function() {
+  return arguments[0](x[3])
+})
+
+
+compiles:
+x | run(a)
+x | run(a,b)
+x | reverse()
+
+to:
+_.run(x, a)
+_.run(x, a,b)
+_.reverse(x)
+
+

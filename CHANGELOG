@@ -1,0 +1,77 @@
+v0.2.25 - Adds Mobify.js 1.1 Alpha.
+        - Better error reporting for mobify.js compilation.
+
+v0.2.24 - Fix a regression in `$.fn.imageResize`.
+
+v0.2.23 - Fix `Mobify.desktop` with V6 tags.
+        - Introduce hash function for `$.fn.imageResize`.
+
+v0.2.22 - Adds persistence to PreviewServer.
+        - Updates API endpoint.
+
+v0.2.21 - Plugin compatibility with older tags.
+
+v0.2.20 - Fixes scaffold errors.
+        - Improves HTML detection for tag injection.
+        - Adds communication layer with portal.mobify.com.
+        - Adds better error handling.
+        - Fixes an issue in the V6 tag with anchor string precedance.
+        - Fixes an issue handling orientation events in mobify-js.
+
+v0.2.19 - Adds HTTPS support to tag injection.
+        - ImageResize uses shorter hosts.
+        - Default tag version is 6.
+
+v0.2.18 - Added styling to scaffold.
+
+v0.2.17 - $.fn.imageResize refractor.
+
+v0.2.16 - Adds StudioJS hooks.
+
+v0.2.15 - Adds per session alternate bundle handling for V6 tags.
+
+v0.2.14 - Adds LICENSE.
+
+v0.2.13 - Updates fstream for npm fix.
+
+v0.2.12 - Adds ImageResize() API
+
+v0.2.11 - Adds changes to api/main.js for v6 compatibility.
+
+v0.2.10 - Adds changes to unmobify.js for v6 compatability.
+
+v0.2.9 - Changes 'build' to 'push'
+
+v0.2.8 - Adds v6 Tag Compatability
+       - Fixes DOMContentLoaded bug.
+
+v0.2.7 - Bumps mobify.js for legacy builds fix.
+
+v0.2.6 - Bumps mobify.js.
+
+v0.2.5 - Adds "login" command.
+
+v0.2.4 - Adds basic scaffold.
+
+v0.2.3 - Fixes legacy sites.
+       - Adds --project override.
+
+v0.2.2 - Adds Minification
+
+v0.2.1 - Adds `--auth` option to `build` command.
+       - Adds `--tag` option to `preview` command.
+
+v0.1.4 - Version Bump
+
+v0.1.3 - Adds `mobify` tool. `mobifyjs` tool will be deprecated.
+
+v0.1.2 - Fixed bug which caused tag-injector to fail due to connections being
+        set to keep-alive.
+
+Pre-history:
+
+>>>>>>> Adds `mobify` tool to replace `mobifyjs` tool.
+1.2 - Add support for running cauldron right in the site directory
+      Absolute references are now tried in both cwd and cauldron directory
+1.1 - Renamed from sprocket to cauldron
+1.0 - Initial release

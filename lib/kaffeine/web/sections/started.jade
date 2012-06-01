@@ -1,0 +1,24 @@
+h2 Overview
+
+textarea
+  // Implicit variable declarions
+  zoo = {}
+  // Function arrow syntax and implicit formal parameter list
+  hello = -> { "Greetings!" }
+  // Hash shortcut for arguments
+  square = -> { # * # }
+
+  // Implicit brackets for function calls with arguments
+  open door
+
+  // Alternative method-calling mechanism (piping)
+  users | select -> #.age > 18
+
+  // For loop extensions (of)
+  for user of users
+    send.welcome user
+
+  // Unwrapping async calls via the ! postfix
+  if Job.count! > 10 {
+    process data
+  }

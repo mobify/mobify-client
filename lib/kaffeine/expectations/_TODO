@@ -1,0 +1,188 @@
+compiles: 
+
+(1/2 + (1/2))
+
+to:
+
+(1/2 + (1/2))
+
+compiles:
+
+
+for i of 10|range
+  100
+  
+to:
+
+compiles: 
+
+a = 1
+for i of z * z() 
+{
+  xx
+}
+
+to: 
+
+x
+
+compiles: 
+
+-> {
+  fn = arguments | last
+  if typeof fn is "function" {
+  }
+}
+
+to:
+
+x
+
+compiles: 
+
+Poly::find_for_key = (key) -> {  
+  @units | select -> #._poly.key is key
+         | sortBy -> -#._poly.time
+         | first
+}
+
+to: 
+
+ Poly.prototype.find_for_key = function(key) {
+  return _.first(_.sortBy(_.select(this.units, function() { return arguments[0]._poly.key === key }), function() { return -arguments[0]._poly.time }))
+  
+  
+}
+
+
+compiles:
+x | reverse
+
+to:
+__.reverse.call(this, x)
+
+
+compiles:
+
+x | reverse | y
+
+to:
+__.y.call(this, __.reverse.call(this, x))
+
+compiles:
+
+x | map {;} | .join()
+
+to:
+
+(__.map.call(this, x, function() {;})).join()
+
+compiles:
+x | map a 
+  | detect b
+  
+
+__.detect.call(this, 
+  __.map.call(this, x, a), b)
+
+compiles:
+x | map a 
+  | detect b
+  | times 2
+to:
+
+__.times.call(this, 
+  __.detect.call(this, 
+  __.map.call(this, x, a), b ) )
+
+compiles:
+{
+  x++
+  1
+}
+
+to:
+function() {
+  x++
+  return 1
+}
+
+compiles:
+function() {}
+{}
+{ }
+
+to:
+function() {}
+{}
+{ }
+
+
+compiles:
+x = {
+ y
+ bind!
+  x(y)
+  ---
+  z
+}
+
+to:
+var x; x = function() {
+ y
+ bind(function() {
+  x(y) })
+
+  z
+}
+
+
+compiles:
+
+x = {
+  if @_puzzle, return callback @_puzzle
+
+  @_puzzle = Puzzle.find! @puzzle_id()
+  callback @_puzzle
+}
+
+to:
+ var x; x = function() {
+  var _this = this; if(this._puzzle) return callback(this._puzzle)
+
+  Puzzle.find(this.puzzle_id(), function(_0) { _this._puzzle = _0
+  return callback(_this._puzzle) })
+}
+
+compiles: 
+
+ok !failed
+
+to: 
+
+x
+
+compiles:
+
+game.add new Player()
+
+to: 
+
+x
+
+compiles:
+
+throws = (fn) -> {
+  failed = false
+  try {
+    fn()
+    failed = true
+  } catch(e) {
+
+  }
+  return !failed
+}
+
+to:
+
+x

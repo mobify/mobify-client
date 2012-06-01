@@ -1,0 +1,302 @@
+<script type="text/javascript">
+/*<![CDATA[*/
+
+// TODO: Update detect.js to look for roles.
+// TODO: Queue for detect.js?
+// TODO: Is `display` faster than `visibility`?
+
+// Bootstrap:
+// Work around the webkit lookahead prefetcher by escaping the document using <style>.
+// Fetch detect.js to determine whether a browser is `mobile` and `mobify.js` for the
+// transformation.
+
+// 4.1.4 - Absolutize detect.js path
+// 4.1.3 - Fix IE onerror error.
+// 4.1.2 - Expose `beforeload` handler so we can unbind it.
+// 4.1.1 - Remove `oneTag`. `?sync` to all scripts. `?role` for detect. Visible `unmobify` error.
+// 4.1.0 - Added mobify.js to mobify.js failover. Now, configure() path can be an array.
+// 4.0.9 - Moved mode flags to tri-state capture var, added sync/async handling for trust, httpized cloudfront URLs
+// 4.0.8 - Tags now pass HTML5 and XHTML 1.1 Strict validation through W3C validator.
+// 4.0.7 - Added flags: asyncConf (load conf sooner in async mode), altCapture (skip style/textarea capturing, use bare beforeload/base/script nukage).
+// 4.0.6 - Applied some microoptimizations to reduce tag size. 2528 bytes uglified.
+// 4.0.5 - Try loading unmobify.js from our CDNs if mobify.js is missing or broken.
+// 4.0.4 - Allowed setting cookies starting with mobify-flag through #mobify-override
+// 4.0.3 - Added per-method escape hatch to method poisoning
+// 4.0.2 - Added preliminary squashing of uncontained scripts and external requests.
+// 4.0.1 - Rationalized naming of class and type attributes that tags care about.
+// 4.0   - Textarea, async loading and validation-friendlier tags. Oh my!
+
+(function (window, document, undefined) {
+    var config = { tagVersion: '4.1.4', capture: 'sync' }
+
+        ,styleTag = '<style type="mobify/grab">'
+
+        ,textareaTag = '<textarea class="mobify-grab" style="display:none">'
+
+        ,methodsToPoison = [
+            'Image',
+            'setTimeout',
+            'setInterval',
+            'document.createElement',
+            'document.write',
+            'Node.prototype.addEventListener'
+         ]
+
+        ,methodAntidotes
+
+        ,documentAddEventListener = function(type, handler, useCapture) {
+            document.addEventListener(type, handler, useCapture || false);
+         }
+
+         // Pass as the last argument to a poisoned method for standard behaviour.
+        ,callAntidote = 'We1Rd[0Ng'
+        
+        ,location = document.location
+
+        ,noop = function(){}
+
+         // `document.write` is used before and after posion. Store a reference so
+         // we can get the expected behaviour.
+        ,documentWrite = document.write
+
+        ,write = function(s) { 
+            return documentWrite.call(document, s); 
+         }
+
+        ,resolve = function(url, sync) {
+            var absolute = url.replace(/^(?!http|\/\/)/i, config.path)
+            return absolute + (/\?/.test(absolute) ? '&' : '?') + 'sync=' + sync
+         }
+
+         // `document.write` a synchronous script.
+         // Pass `name` for external or `content` for inline script.
+        ,writeScript = function(name, content) {
+            name = name ? ' src="' + resolve(name, 's') + '"' : '';
+            write('<script class="mobify-skip"' + name + '>'
+                + (content || '') + '<\/script>');
+         }
+
+         // Memoized
+        ,firstScript 
+
+        ,asyncScript = function(name, callback) {
+            var script = document.createElement('script', callAntidote);
+            script.className = 'mobify-skip';
+            script.src = resolve(name, 'a');
+            if (callback) {
+                script.onload = script.onerror = callback;
+            }
+            firstScript = firstScript || document.getElementsByTagName('script')[0];
+            firstScript.parentNode.insertBefore(script, firstScript, callAntidote);
+         }
+
+         // The page was escaped, so check if we successfully loaded the API.
+         // If not try loading the next `mobifyPath`. If no files are left, fail.
+        ,loadPaths = function() {
+            if (!Mobify.unmobify /* Unmobifier or mobify.js is not loaded. */) {
+                var path = Mobify.mobifyPaths.shift();
+
+                if (!path) {
+                    setCookie('mobify-js', 0);
+                    return documentAddEventListener('DOMContentLoaded', function() {
+                       write('<h1>Site error. Reload to try again.</h1>');
+                    });
+                }
+
+                config.capture == 'sync'
+                    ? (writeScript(path)
+                        ,writeScript(undefined, 'Mobify.loadPaths()'))
+                    : asyncScript(path, loadPaths);
+            }
+        }
+
+        // Cannot set multiple cookies using document.cookie. 
+        // But you could set very long cookies.
+        // `setCookie` with falesy expires for a session cookie.
+        ,setCookie = function(name, value, expires) {
+            expires = expires 
+                ? '; expires=' + (new Date((new Date).getTime()
+                      + (1000 * 60 * 60 * 24 * expires))).toUTCString() 
+                : '';  
+            var result = name + '=' + value + '; path=/' + expires
+            document.cookie = result;
+         }
+
+         ,beforeload = function(e) {
+            if (!e.target.className.match('mobify-skip')) {
+                e.preventDefault();
+            }
+         }
+
+    var Mobify = window.Mobify = window.Mobify || {
+         points: [+new Date]
+        ,config: config
+        ,write: write
+        ,writeScript: writeScript
+        ,asyncScript: asyncScript
+        ,loadPaths: loadPaths
+        ,setCookie: setCookie
+         // iOS 4 doesn't correctly unbind this after `document.open` so expose
+         // it so we can unbind in the API.
+        ,beforeload: beforeload
+
+        // If `mobify-override` hash is present, set cookies for whitelisted
+        // hashes.
+        // #mobify-override&mobify-js=xxx&mobify-path=xxx&mobify-debug=xxx
+        // You can also unset by setting the property to blank.
+        ,configure: function(opts) {
+            var  key
+                ,path
+                ,match
+                ,re
+                ,whitelist = ['js', 'path', 'debug', 'flag\\\\w*']
+                ,hash = location.hash;
+
+            for (key in opts) {
+                config[key] = opts[key];
+            }
+            
+            if (!!~hash.indexOf('mobify-override')) {
+                while (key = whitelist.pop()) {
+                    key = 'mobify-' + key;
+                    for (re = new RegExp('&(' + key + ')=([^&;]*)', 'g');
+                          match = re.exec(hash);
+                    ) {
+                        setCookie(match[1], match[2], match[2] ? 7 : -1); 
+                    }
+                }
+            }
+
+            // If `path` was overridden, load through preview.
+            // Escape to stop people from going '><script>alert('haha')
+            if (path = /mobify-path=([^;]+)/i.exec(document.cookie)) {
+                config.path = location.protocol + '%(trust)s' + escape(path[1]);
+            } 
+
+            // `mobifyPaths` is a list of scripts to load.
+            // Populated it by passing a list of site folders to Mobify.configure.
+            var mobifyPaths = config.path;
+            if (!mobifyPaths.push) {
+                mobifyPaths = [mobifyPaths];
+            } else {
+                config.path = config.path[0];
+            }
+    
+            // Append known `unmobify.js` URLS to `mobifyPaths` for fallback.
+            mobifyPaths = mobifyPaths.concat([
+                '//cdn.mobify.com/un',
+                '//d3tx18vam4pzc8.cloudfront.net/un'
+            ]);
+          
+            // Absolutize `mobifyPaths` to avoid <base> blocking.
+            var absolutizer = document.createElement('a');
+            for (var i = 0; i < mobifyPaths.length; i++) {
+                absolutizer.href = mobifyPaths[i];
+                mobifyPaths[i] = absolutizer.href + 'mobify.js';
+            }
+            absolutizer.href = config.path;
+            config.path = absolutizer.href;
+
+            Mobify.mobifyPaths = mobifyPaths;        
+         }
+
+        ,restoreMethods: function() {
+            if (methodAntidotes) {
+                methodAntidotes.forEach(function(entry) {
+                    entry[0][entry[1]] = entry[2];
+                });
+                methodAntidotes = undefined;
+            }
+         }
+
+         // Victory! Set the configuration path based on the escaped cookie, then hide the document
+         // until our CSS is loaded.
+        ,go: function() {
+            if (config.capture == 'async') {
+                loadPaths();
+            }
+
+            // `beforeload` prevents resources from loading when bound on capture.
+            documentAddEventListener('beforeload', beforeload, true);
+
+            // <base> prevents relative resources from being loaded.
+            write('<base class="mobify-skip" href="data:,RR">'
+                + '</he'+ 'ad><bo' + 'dy>' + textareaTag);
+            
+            // Hide our shenanigans from prying eyes.
+            document.documentElement.style.visibility = 'hidden';
+
+            // Poison the core DOM methods.
+            methodAntidotes = methodsToPoison.map(function(entry) {
+                var tokens = entry.split('.');
+                var tip = tokens.pop();
+                var target = window;
+
+                while (tokens.length) target = target[tokens.shift()];
+
+                var oldValue = target[tip];
+                target[tip] = function() {
+                    var args = arguments;
+                    if (args[args.length - 1] == callAntidote) {
+                        return oldValue.apply(this, args);
+                    }
+
+                    // Throw to break executing inline scripts.
+                    throw 'Blocked by Mobify';
+                };
+
+                return [target, tip, oldValue]
+            });
+         }
+        
+         // Defeat, leave the page alone by turning all snippet operations into noops.
+        ,nogo: function() {
+            Mobify.snippet = noop;
+         }
+
+         // Begin, continue or end escaping of the page.
+        ,snippet: function(tag) {
+            if (tag == 'start') {
+                var detectFile = 'detect.js?role=';
+                var match = /mobify-js=([\-0-9]+)/.exec(document.cookie);
+                if (match
+                    ? (+match[1] > 0)
+                    : /ip(hone|od)|android.*(mobile)|blackberry.*applewebkit/i
+                        .test(navigator.userAgent)) {
+                    // Previously accept via cookie or UA is certainly mobile.
+                    Mobify.go();
+                    // Async load detect for side effects.
+                    asyncScript(detectFile + 'mobile');
+                } else if (match && (+match[1] <= 0)) {
+                    // Previously rejected by cookie.
+                    Mobify.nogo();
+                    // Async load detect for side effects.
+                    asyncScript(detectFile + 'desktop');
+                } else {
+                    // Unknown. Sync load `detect.js` to figure out whether to mobify.
+                    // If `detect.js` fails, ignore our tags.
+                    writeScript(detectFile + 'detect');
+                    writeScript(undefined, 'Mobify.nogo()');
+                }
+            } else if (tag == 'end') {
+                Mobify.snippet = noop;
+                if (config.capture == 'sync') {
+                    Mobify.restoreMethods();
+                    loadPaths();
+                }
+                Mobify.points.push(+new Date);
+            } else if (tag == 'textarea') {
+                write(textareaTag);
+            } else if (tag == 'style') {
+                write(styleTag);
+            }
+        }
+    };
+
+})(this, document);
+
+Mobify.configure(%(configure_opts)s);
+Mobify.snippet('start');
+
+/*]]>*/
+</script>

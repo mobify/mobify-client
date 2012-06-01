@@ -1,0 +1,9 @@
+[submodule "vendor/mobify-js/1.0/base"]
+	path = vendor/mobify-js/1.0/base
+	url = git@github.com:mobify/mobifyjs.git
+[submodule "vendor/mobify-js/1.1/base"]
+	path = vendor/mobify-js/1.1/base
+	url = git@github.com:mobify/mobifyjs.git
+[submodule "vendor/mobify-js/1.2/base"]
+	path = vendor/mobify-js/1.2/base
+	url = git@github.com:mobify/mobifyjs.git

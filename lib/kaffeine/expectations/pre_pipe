@@ -1,0 +1,9 @@
+#pre_pipe
+
+compiles:
+
+x | map y*y
+
+to:
+
+x | y*y

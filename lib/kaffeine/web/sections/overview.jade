@@ -1,0 +1,20 @@
+p Kaffeine is a set of extensions to the JavaScript syntax that attempt to make it nicer to use. It compiles directly into JavaScript that is very similar, readable and line for line equivalent to the input (for easy debugging).
+
+p Kaffeine can be compiled to JavaScript offline, or as needed in a browser. Offline compiler support is provided via Node, and you can also use Kaffeine to power Node server apps.
+
+h3 How does it compare with CoffeeScript?
+
+p Kaffeine and CoffeeScript are similar in that they both compile to plain JavaScript code that runs in a browser or JS server environment. However, the design decisions underpinning Kaffeine are different to CoffeeScript: 
+
+ul
+  li compiles line-for-line
+  li accepts standard JavaScript
+  li comments are preserved
+  li can simplify asynchronous programming
+  li outputs JavaScript that is very similar to input
+  li whitespace rules are the same as javascript (meaning you can structure your program as you wish)
+
+h3 Why is line-for-line important?
+
+p Not all JavaScript compilers respect the line numbering of your original source code. When the result runs perfectly, no problem, but this change in vertical layout has a dire effect on debugging. For instance, if something goes wrong on Line 475 of a randomly compiled program, how would anyone know where the problem was? Kaffeine addresses this by maintaining a strict 1:1 line ratio.
+

@@ -1,0 +1,5 @@
+.idea
+*.swp
+.DS_STORE
+node_modules
+*.bak

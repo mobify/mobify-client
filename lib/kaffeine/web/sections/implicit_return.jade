@@ -1,0 +1,22 @@
+h3 Implicit return
+
+p Kaffeine's arrow function syntax juices up the function-calling process by determining a completion value based on the last statement in the block, and returning that automatically.
+
+p The last statement of a function defined with <code>-></code> will be automagically returned. For example
+
+textarea
+  getName = -> @name
+
+p This will only work for returnable statements, i.e. variables, objects and functions. So an final if statement will result no return value
+
+textarea
+  getName = -> { 
+    if truthy 
+      @name 
+  }
+
+p Note: this will be added in a future version. See Roadmap
+
+h4 Gotcha: be careful with using function arrow syntax with constructors
+
+p A constructor function won't work properly if it returns an array or an object. To avoid mistakenly creating a dud constructor, you can either fall back to using the function keyword, or opt-in to Kaffeine's class keyword, which offers enhanced inheritance support.

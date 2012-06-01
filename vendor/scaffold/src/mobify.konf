@@ -1,0 +1,28 @@
+{>"/base/lib/base_konf.konf"/}
+{<data} {
+
+'content': function(context) {
+    return context.choose({
+        'templateName': 'home',
+        '!title': function(context) {
+            return $('title').text() 
+        }
+    })
+},
+
+'script': function(context) {
+    return $('script').remove() 
+},
+
+'stylesheet': function(context) {
+    return $('link[rel="stylesheet"]').remove() 
+},
+
+'OUTPUTHTML': function(context) {
+    var templateName = context.data('content.templateName')
+    if (templateName) {
+        return context.tmpl(templateName);
+    }
+}
+
+} {/data}

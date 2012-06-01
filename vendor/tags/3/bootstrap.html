@@ -1,0 +1,144 @@
+<script type="text/javascript">
+/*<![CDATA[*/
+
+// Bootstrap:
+// Work around the webkit lookahead prefetcher by escaping the document using <style>.
+// Fetch detect.js to determine whether a browser is `mobile` and `mobify.js` for the
+// transformation.
+
+// History:
+// 3.3.1 - Prevent mobify-path check from clobbering the cookie variable.
+// 3.3 - Move mobify-path from `Mobify.go` to `Mobify.configureFromHash`.
+// 3.2 - mobify => mobify-js, add support for mobify-js=-1
+// 3.1.1 - Noop Mobify.snippet afeter hitting body end.
+// 3.1 - Rollback false optimization configureFromHash.whitelist.
+
+(function (window, document, undefined) {
+    var mobileRe = /ip(hone|od)|android.*(mobile)|blackberry.*applewebkit/i;
+    var cookie = document.cookie;
+    var config = { tagVersion: '3.3.1' };
+    var Mobify = window.Mobify = window.Mobify || {
+        points: [+new Date],
+        config: config,
+
+        configure: function(opts) {
+            for (p in opts) {
+                config[p] = opts[p];
+            };
+
+            Mobify.configureFromHash();
+        },
+
+        // Cannot set multiple cookies using document.cookie. But you could set very long cookies.
+        setCookie: function(name, value, expires) {
+            var expires = (new Date((new Date).getTime() + (1000 * 60 * 60 * 24 * expires))).toGMTString();
+            var result = name + '=' + value + '; path=/; expires=' + expires;
+            document.cookie = result;
+            cookie = document.cookie;
+        },
+
+        // If anything is hashed, set a cookie for it to be caught later.
+        // #mobify-override&mobify-js=xxx&mobify-path=xxx&mobify-debug=xxx
+        // If a path override was set, compute it now.
+        // //trust.com/http://path/to/sitedir/
+        // Escape to stop people from going '><script>alert('haha')
+        configureFromHash: function() {
+            var whitelist = ['js', 'path', 'debug'];
+            var hash = document.location.hash;
+            var key;
+            var path;
+            
+            if (!!~hash.indexOf('mobify-override')) {
+                while (key = whitelist.pop()) {
+                    key = 'mobify-' + key;
+                    hash.replace(new RegExp('&' + key + '=([^&]*)', 'i'), function(match, value) {
+                        Mobify.setCookie(key, value, value ? 7 : -1); 
+                    });
+                }
+            }
+
+            if (path = /mobify-path=([^;]+)/i.exec(cookie)) {
+                config.path = '%(trust)s' + escape(path[1]);
+            }
+        },
+
+        // Using an unknown type is ~x2 faster.
+        writeStyle: function() {
+            document.write('<style type="text/mobify">');
+        },
+        
+        // Pass `name` for external or `content` for inline script.
+        // Relative external scripts are resolved to config path.
+        writeScript: function(name, content) {
+            var fullName = name && (name.match(/^http|\/\//i) ? '' : config.path) + name;
+            var srcStr = (!! name) ? ' src="' + fullName + '"' : '';
+            content = content || '';
+            document.write('<script type="text/javascript" class="mobify-ignore"' + srcStr + '>' + content + '<\/script>');
+        },
+
+        // Load a script - make sure to ignore it later.        
+        asyncScript: function(name) {
+            var script = document.createElement('script');
+            script.className = 'mobify-ignore';
+            script.type = 'text/javascript';
+            script.src = config.path + name;
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(script, s);
+        },
+        
+        // Victory! Set the configuration path based on the escaped cookie, then hide the document
+        // until our CSS is loaded.
+        go: function() {
+            Mobify.writeStyle();
+            document.documentElement.style.visibility = 'hidden';
+        },
+        
+        // Defeat, leave the page alone by turning all snippet operations into noops.
+        nogo: function() {
+            Mobify.snippet = function(){};
+        },
+        
+        snippet: function(tag) {
+            if (tag == 'head start') {
+                var match = /mobify-js=([\-0-9]+)/.exec(cookie);
+
+                // Cached or clearly mobile.
+                if (match ? (+match[1] > 0) : mobileRe.test(navigator.userAgent)) {
+                    Mobify.go();
+                    Mobify.asyncScript('detect.js');
+                // Clearly not mobile.
+                } else if (match && (+match[1] <= 0)) {
+                    Mobify.nogo();
+                    Mobify.asyncScript('detect.js');
+                // Unknown. `Mobify.nogo` guards against broken scripts.
+                } else {
+                    Mobify.config.stageTwoDetect = 1;
+                    Mobify.writeScript('detect.js');
+                    Mobify.writeScript(undefined, 'Mobify.nogo()');
+                }
+            
+            } else if (tag == 'body end') {
+                Mobify.snippet = function(){};
+
+                Mobify.points.push(+new Date);
+
+                Mobify.writeScript('mobify.js');
+                
+                // If mobify.js fails, fallback to unmobify.js
+                ['cdn.mobify.com', 'd3tx18vam4pzc8.cloudfront.net'].forEach(function(cdn) {
+                    var s = 'if (!Mobify.init && !Mobify.bail) Mobify.writeScript("//' + cdn + '/unmobify.js");';
+                    Mobify.writeScript(undefined, s);
+                });
+                
+            } else if (tag != 'head end') {
+                Mobify.writeStyle();
+            }
+        }
+    };
+})(this, document);
+
+Mobify.configure(%(configure_opts)s);
+Mobify.snippet('head start');
+
+/*]]>*/
+</script>
