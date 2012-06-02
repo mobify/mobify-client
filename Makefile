@@ -4,10 +4,10 @@ all:
 	archive
 
 archive: 
-	git-archive-all --prefix='mobify/' tmp.tar 
+	git-archive-all --prefix='mobify-client/' tmp.tar 
 	tar -xf tmp.tar
-	tar -czhf mobify.`bin/mobify.js -V`.tgz mobify
-	rm -rf mobify;
+	tar -czhf mobify-client.`bin/mobify.js -V`.tgz mobify
+	rm -rf mobify-client;
 	rm tmp.tar
 
 tests:
