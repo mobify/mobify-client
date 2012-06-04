@@ -53,7 +53,7 @@ program
 
         server = Preview.createServer(environment)
         server.listen options.port, options.address
-        console.log "Running Preview at http://#{options.address}:#{options.port}/"
+        console.log "Running Preview at address #{options.address} and port #{options.port}"
         
         if options.tag
             host = '0.0.0.0'
