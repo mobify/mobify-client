@@ -331,7 +331,7 @@ Returns the User-Agent/Server of the tools
 
 ###
 exports.getUserAgent = getUserAgent = () ->
-    "mobify-js-tools v#{getVersion()};"
+    "mobify-client v#{getVersion()};"
 
 
 ###
