@@ -10,11 +10,11 @@ archive:
 	rm -rf mobify-client;
 	rm tmp.tar
 
-tests:
+test:
 	node ./node_modules/.bin/mocha \
         -u exports \
         --compilers coffee:coffee-script \
-        --globals p,last,tail,vars,newBlocks,preview \
+        --ignore-leaks  \
         $(TESTS)
 
 jenkins:
@@ -22,5 +22,7 @@ jenkins:
         -u exports \
         -R xunit \
         --compilers coffee:coffee-script \
-        --globals p,last,tail,vars,newBlocks,preview \
+        --ignore-leaks  \
         $(TESTS) | grep '<*>' | tee report.xml
+
+.PHONY: test
