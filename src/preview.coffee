@@ -110,6 +110,7 @@ exports.PreviewMiddleware = PreviewMiddleware = (request, response, next) ->
     response.setHeader "Pragma", "no-cache"
     response.setHeader "Server", Utils.getUserAgent()
     response.setHeader "Access-Control-Allow-Origin", "*"
+    response.setHeader "Access-Control-Expose-Headers", "Server"
 
     next()
 
