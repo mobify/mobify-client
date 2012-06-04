@@ -74,7 +74,6 @@ program
             server.listen port, host
             console.log "Running Tag at https://#{host}:#{port}/"
 
-        console.log "View local changes at https://cloud.mobify.com/projects/#{project.name}/preview/?bundle_id=localhost"
         console.log "Press <CTRL-C> to terminate."
 
 push = (options) ->
