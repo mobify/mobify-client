@@ -26,8 +26,6 @@ extend = (obj, mixin) ->
 include = (klass, mixin) ->
     extend klass.prototype, mixin
 
-
-
 getTags = (opts, version) ->
     tags = {}
     path = Path.join appSourceDir, 'vendor', 'tags', version + '/'
@@ -159,9 +157,7 @@ createServer = (options) ->
     opts =
         port: 80
         proxy_module: Http
-        trustServer: '//preview.mobify.com/'
-        siteFolderPath: 'http://localhost:8080/'
-        tag_version: 5
+        tag_version: 6
 
     klass = options.server or HttpServer
     extend opts, options
