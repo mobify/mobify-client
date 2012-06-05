@@ -72,18 +72,23 @@ class PreviewHandler
         request.on "end", =>
             url = URL.parse request.url
             path = url.pathname.slice 1
+            headers = {"Content-Type": "text/plain"}
 
             process_body = (body) =>
                 try
                     local_path = @env.getPathInProject path
                 catch err
-                    response.writeHead 400, {"Content-Type": "text/plain"}
+                    response.writeHead 400, headers
                     response.end "Path falls outside project root: #{path}"
                     return
 
                 FS.writeFile local_path, body, (err, data) ->
-                    response.writeHead 200,
-                        'Content-Type': 'text/plain'
+                    if err
+                        response.writeHead 400, headers
+                        response.end "Could not write #{local_path}"
+                        return
+
+                    response.writeHead 200, headers
                     response.end "OKAY."
 
             if request.headers["location"]
@@ -94,13 +99,13 @@ class PreviewHandler
                     encoding: null
                 }, (err, response, body) ->
                     if err
-                        response.writeHead 400, {"Content-Type": "text/plain"}
+                        response.writeHead 400, headers
                         response.end "Could not load #{location}"
                         return
+
                     process_body body
             else
                 process_body buf.toString()
-
 
 
 exports.PreviewHandler = PreviewHandler
