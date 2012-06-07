@@ -53,7 +53,7 @@ program
 
         server = Preview.createServer(environment)
         server.listen options.port, options.address
-        console.log "Running Preview at http://#{options.address}:#{options.port}/"
+        console.log "Running Preview at address #{options.address} and port #{options.port}"
         
         if options.tag
             host = '0.0.0.0'
@@ -74,7 +74,6 @@ program
             server.listen port, host
             console.log "Running Tag at https://#{host}:#{port}/"
 
-        console.log "View local changes at https://cloud.mobify.com/projects/#{project.name}/preview/?bundle_id=localhost"
         console.log "Press <CTRL-C> to terminate."
 
 push = (options) ->
