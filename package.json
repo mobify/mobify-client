@@ -1,6 +1,6 @@
 {
 	"name": "mobify-client",
-	"version": "0.3.2",
+	"version": "0.3.3",
 	"description": "Tools for building and compiling mobify.js adaptations",
 	"author": "Mobify <dev@mobify.com>",
     "dependencies": {
