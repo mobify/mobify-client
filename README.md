@@ -35,11 +35,11 @@ The mobify client requires Node >= 0.6.2.
 
 First remove any previously installed versions of the client:
 
-    npm -g remove mobify-js-tools
+    sudo npm -g remove mobify-client
 
 Then install the client by running this command from Terminal. Use your email address and API key from Portal:
 
-    npm -g install https://<EMAIL>:<KEY>@portal.mobify.com/npm/mobify-js-tools/
+    sudo npm -g install mobify-client
 
 Test that the client is install by running the `mobify` command in Terminal:
 
@@ -50,31 +50,3 @@ Test that the client is install by running the `mobify` command in Terminal:
 ---------------------
 
     make tests
-
-
-### Updating the base API Version
----------------------------------
-
-1) Go in to `vendor/mobify-js/latest/base`, and checkout the version you want.
-
-2) Commit your change to the submodule.
-
-3) To "bake" the latest verison in to a named versioned (eg, 1.0) go:
-
-    make bake VERSION=1.0
-
-4) This will copy files out of the mobify-js submodule and into the tools repo. You must then commit them.
-
-
-### Releasing a new version
----------------------------
-
-1) Update the API, as above if necessary.
-
-2) Update the CHANGELOG and project.json with new (higher) version number.
-
-3) Make a new tools tarball:
-
-    make
-
-4) Copy new tarball to portal/protected and update symlink.
