@@ -27,7 +27,6 @@ var doc = document
   , script
   , firstScript = doc.getElementsByTagName(sscript)[0]
   , paths = [0, 1]
-  , bundle
   , Mobify = this.Mobify = {points: [+new Date], tagVersion: [7, 0]}
   , matchedPath = /((; )|#|&|^)mobify-path=([^&;]*)/g.exec(location.hash + '; ' + doc.cookie);
 
@@ -36,9 +35,9 @@ var doc = document
 // Otherwise ask the `detector` what to load and provide `unmobify` fallbacks.
 // Prioritize anchor over cookie and sessionStorage.
 if (matchedPath) {
-    (bundle = matchedPath[3])
-        && !+(bundle = matchedPath[2] && sessionStorage[mobifypath] || bundle)
-        && (paths = [1, '//preview.' + mobifycom + escape(bundle)])
+    (src = matchedPath[3])
+        && !+(src = matchedPath[2] && sessionStorage[mobifypath] || src)
+        && (paths = [1, '//preview.' + mobifycom + escape(src)])
         && detector(doc, 1); // Detector can have useful side effects (change bgcolor, render logo)
 } else {
     // Allows `detector` to not return a value and still not mobify.
