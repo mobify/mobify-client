@@ -1,0 +1,75 @@
+<script>
+this.Mobify || (function(detector) {
+
+// Initial load and followup.
+// If src=1, don't load.
+// If src=-1, total failure, set the opt out cookie.
+// Otherwise just load the script.
+function next() {
+    src = paths.shift();
+    if (Mobify.api || +src) {
+        ~src || (doc.cookie = mobifypath + '=; path=/');
+    } else {
+        script = doc.createElement(sscript);
+        script.src = src;
+        script.onload = script.onerror = next;
+        firstScript.parentNode.insertBefore(script, firstScript);
+    }
+}
+
+var doc = document
+  , src
+  , sscript = 'script'
+  , mobify = 'mobify'
+  , mobifycom = mobify + '.com/'
+  , mobifypath = mobify + '-path'
+  , unmobify = mobifycom + 'un' + mobify + '2.js'
+  , script
+  , firstScript = doc.getElementsByTagName(sscript)[0]
+  , paths = [0, 1]
+  , bundle
+  , Mobify = this.Mobify = {points: [+new Date], tagVersion: [7, 0]}
+  , matchedPath = /((; )|#|&|^)mobify-path=([^&;]*)/g.exec(location.hash + '; ' + doc.cookie);
+
+// If path matched, load from preview. 
+// If path was empty, don't load.
+// Otherwise ask the `detector` what to load and provide `unmobify` fallbacks.
+// Prioritize anchor over cookie and sessionStorage.
+if (matchedPath) {
+    (bundle = matchedPath[3])
+        && !+(bundle = matchedPath[2] && sessionStorage[mobifypath] || bundle)
+        && (paths = [1, '//preview.' + mobifycom + escape(bundle)])
+        && detector(doc, 1); // Detector can have useful side effects (change bgcolor, render logo)
+} else {
+    // Allows `detector` to not return a value and still not mobify.
+    paths = detector(doc) || paths;
+    if (paths[0]) {
+        paths.push('//cdn.' + unmobify, '//files01.' + unmobify, -1);
+    }
+}
+
+// Load Mobify.js using `setTimeout` to foil the lookahead parser.
+// Otherwise load any provided fallback script.
+if (paths.shift()) {
+    // To support late tag injection, uncomment the following:
+    // readyState: uninitialized|loading|loaded|interactive|complete
+    // Loading is document.write friendly, all others will blow up the doc.
+    //if (/g$/.test(doc.readyState)) {
+    doc.write('<plaintext style="display:none">');
+    //}
+    
+} else {
+    paths[1] = 1;
+}
+setTimeout(next);
+
+})(function(doc, force) {
+    if (force || /ip(hone|od|ad)|android|blackberry.*applewebkit/i.test(navigator.userAgent)){
+        // Here, you can doc.write markup that tells user that something is happening
+        // Also, you could preload important stylesheets/images/etc.
+        // Make sure to use mobify-ignore class on all top level elements you end up creating,
+        // so that they would not be picked up by adaptation.
+        return [1, 'http://localhost:8080/mobify.js']
+    }
+});
+</script>
