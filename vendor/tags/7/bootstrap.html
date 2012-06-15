@@ -38,10 +38,10 @@ if (matchedPath) {
     (src = matchedPath[3])
         && !+(src = matchedPath[2] && sessionStorage[mobifypath] || src)
         && (paths = [1, '//preview.' + mobifycom + escape(src)])
-        && detector(doc, 1); // Detector can have useful side effects (change bgcolor, render logo)
+        && detector(1); // Detector can have useful side effects (change bgcolor, render logo)
 } else {
     // Allows `detector` to not return a value and still not mobify.
-    paths = detector(doc) || paths;
+    paths = detector() || paths;
     if (paths[0]) {
         paths.push('//cdn.' + unmobify, '//files01.' + unmobify, -1);
     }
@@ -62,7 +62,7 @@ if (paths.shift()) {
 }
 setTimeout(next);
 
-})(function(doc, force) {
+})(function(force) {
     if (force || /ip(hone|od|ad)|android|blackberry.*applewebkit/i.test(navigator.userAgent)){
         // Here, you can doc.write markup that tells user that something is happening
         // Also, you could preload important stylesheets/images/etc.
