@@ -63,12 +63,15 @@ if (paths.shift()) {
 setTimeout(next);
 
 })(function(force) {
+    Mobify.ajs = "http://cloud.mobify.com/path/to/a.js";
     if (force || /ip(hone|od|ad)|android|blackberry.*applewebkit/i.test(navigator.userAgent)){
         // Here, you can doc.write markup that tells user that something is happening
         // Also, you could preload important stylesheets/images/etc.
         // Make sure to use mobify-ignore class on all top level elements you end up creating,
         // so that they would not be picked up by adaptation.
         return [1, 'http://localhost:8080/mobify.js']
+    } else {
+        return [0,Mobify.ajs];
     }
 });
 </script>
