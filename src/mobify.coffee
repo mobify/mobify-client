@@ -29,7 +29,8 @@ program
     .description('Runs a local server you can preview against.')
     .option('-p, --port <port>', 'port to bind to [8080]', parseInt, 8080)
     .option('-a, --address <address>', 'address to bind to [0.0.0.0]', '0.0.0.0')
-    .option('-m, --minify', 'enable minification')
+    .option('-m, --minify', 'enable minification and strip logging code')
+    .option('-s, --strip', 'strip logging code')
     .option('-t, --tag', 'runs a tag injecting proxy, requires sudo')
     .option('-u, --tag-version <version>', 'version of the tags to use [6]', parseInt, 6)
     .action (options) ->
@@ -49,6 +50,10 @@ program
         environment = project.getEnv()
 
         if options.minify
+            environment.production = true
+            environment.minify = true
+
+        if options.strip
             environment.production = true
 
         server = Preview.createServer(environment)

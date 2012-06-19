@@ -298,19 +298,19 @@ class Environment extends Events.EventEmitter
 
 KonfHandler = (path, callback) ->
     # bootstrap for old api, clientTransform for newest changes, both here for backwards compatibility
-    compile path, callback, {bootstrap: true, clientTransform: true, base: @base_path, production: @production}
+    compile path, callback, {bootstrap: true, clientTransform: true, base: @base_path, production: @production, minify: @minify}
 
 
 
 JSMinifyPostProcessor = (data, callback) ->
-    if @production
+    if @minify
         code = Utils.compressJs(data.toString())
         callback null, code
     else
         callback null, data
 
 CSSMinifyPostProcess = (data, callback) ->
-    if @production
+    if @minify
         minified = CleanCSS.process data.toString()
         callback null, minified
     else
