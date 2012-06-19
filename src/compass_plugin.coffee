@@ -6,35 +6,49 @@ Build = require './build.coffee'
 class CompassPlugin
     bindPreview: (preview_server) ->
             console.log "Binding Compass Preview"
-
-            child = ChildProcess.spawn 'compass', ['watch']
             
-            child.stderr.on 'data', (data) ->
-                console.log "Compass: #{data}"
+            ChildProcess.exec 'compass clean', (err, stdout, stderr) ->
+                if err
+                    console.log "Failed to clean SCSS files. Please manually clean files."
 
-            # Compass doesn't seem to print to stdout.
-            child.stdout.on 'data', (data) ->
-                console.log "Compass: #{data}"
+                console.log stdout
+                console.log stderr 
 
-            process.on 'exit', () ->
-                child.kill()
+                child = ChildProcess.spawn 'compass', ['watch']
+                
+                child.stderr.on 'data', (data) ->
+                    console.log "Compass: #{data}"
+
+                # Compass doesn't seem to print to stdout.
+                child.stdout.on 'data', (data) ->
+                    console.log "Compass: #{data}"
+
+                process.on 'exit', () ->
+                    child.kill()
 
     bindBuild: (build) ->
         console.log "Binding Compass Build"
 
         build.addHook 'prebuild', (callback) ->
             console.log 'Compass Compile'
-
-            ChildProcess.exec 'compass compile -e production', (err, stdout, stderr) ->
-                if err?
-                    callback err
-                    return
+            
+            ChildProcess.exec 'compass clean', (err, stdout, stderr) ->
+                if err
+                    console.log "Failed to clean SCSS files. Please manually clean files."
 
                 console.log stdout
-                console.log stderr
-                console.log "Compass Compile Complete."
+                console.log stderr 
 
-                callback()
+                ChildProcess.exec 'compass compile -e production', (err, stdout, stderr) ->
+                    if err
+                        callback err
+                        return
+
+                    console.log stdout
+                    console.log stderr
+                    console.log "Compass Compile Complete."
+
+                    callback()
 
 Preview.registerPlugin CompassPlugin
 Build.registerPlugin CompassPlugin
