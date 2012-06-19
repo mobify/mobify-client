@@ -10,7 +10,9 @@ class CompassPlugin
             ChildProcess.exec 'compass clean', (err, stdout, stderr) ->
                 if err
                     console.log "Failed to clean SCSS files. Please manually clean files."
-                    
+
+                console.log stdout
+                console.log stderr 
 
                 child = ChildProcess.spawn 'compass', ['watch']
                 
@@ -32,12 +34,13 @@ class CompassPlugin
             
             ChildProcess.exec 'compass clean', (err, stdout, stderr) ->
                 if err
-                    console.log "Failed to clean SCSS files. Please manually clean files:"
-                    console.log stdout
-                    console.log stderr 
+                    console.log "Failed to clean SCSS files. Please manually clean files."
+
+                console.log stdout
+                console.log stderr 
 
                 ChildProcess.exec 'compass compile -e production', (err, stdout, stderr) ->
-                    if err?
+                    if err
                         callback err
                         return
 
