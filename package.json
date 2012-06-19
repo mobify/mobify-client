@@ -1,31 +1,31 @@
 {
-	"name": "mobify-client",
-	"version": "0.3.3",
-	"description": "Tools for building and compiling mobify.js adaptations",
-	"author": "Mobify <dev@mobify.com>",
-    "dependencies": {
-        "request": "2.9.100",
-        "async": "0.1.15",
-        "coffee-script": "1.1.3",
-        "commander": "0.5.1",
-        "fstream": "0.1.16",
-        "tar": "0.1.12",
-        "uglify-js": "1.2.5",
-        "clean-css": "0.3.2",
-        "connect": "2.1.3",
-        "express": "2.5.9"
-    },
-    "devDependencies": {
-        "node-static": "0.5.8",
-        "mocha": "1.0.3"
-    },
-    "engine": "node 0.6.2",
-    "main": "./lib/main.js",
-    "bin": {
-        "mobify": "./bin/mobify.js"
-    },
-    "repository" : { 
-        "type" : "git",
-        "url" : "git@github.com:mobify/mobify-client.git"
-    }
+  "name": "mobify-client",
+  "version": "0.3.3",
+  "description": "Tools for building and compiling mobify.js adaptations",
+  "author": "Mobify <dev@mobify.com>",
+  "dependencies": {
+    "request": "2.9.100",
+    "async": "0.1.15",
+    "coffee-script": "1.1.3",
+    "commander": "0.5.1",
+    "fstream": "0.1.16",
+    "tar": "0.1.12",
+    "uglify-js": "1.2.5",
+    "clean-css": "0.4.1",
+    "connect": "2.1.3",
+    "express": "2.5.9"
+  },
+  "devDependencies": {
+    "node-static": "0.5.8",
+    "mocha": "1.0.3"
+  },
+  "engine": "node 0.6.2",
+  "main": "./lib/main.js",
+  "bin": {
+    "mobify": "./bin/mobify.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mobify/mobify-client.git"
+  }
 }
