@@ -435,15 +435,17 @@ class Builder extends Events.EventEmitter
                 console.log "Build Complete."
             callback(errors)
 
-        # Delete build folder
-        try
-            Wrench.rmdirSyncRecursive build_path, false
-        catch err
-            console.log "Failed to delete build folder '#{build_path}'."
-            return
-        
-        @start()
-                              
+        # Delete build folder, if it exists
+        Utils.pathExists build_path, (exists) =>
+            if exists
+                try
+                    Wrench.rmdirSyncRecursive build_path, false
+                catch err
+                    console.log "Failed to delete build folder '#{build_path}'."
+                    return
+            
+            @start()
+                                  
 
     ###
     Excludes files from being built based on a pattern matching
