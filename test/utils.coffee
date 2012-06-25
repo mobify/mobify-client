@@ -8,7 +8,7 @@ FS = require 'fs'
 
 Utils = require '../src/utils.coffee'
 
-package = Path.join __dirname, '../'
+folder = Path.join __dirname, '../'
 
 
 module.exports = 
@@ -88,8 +88,8 @@ module.exports =
         Assert.deepEqual actual, expected, "Split incorrectly 3."
 
     'test_fileExists': (done) ->
-        fixture = Path.join package, "test", "fixtures-cli", "exists.txt"
-        fixture_2 = Path.join package, "test", "fixtures-cli", "doesnotexist.txt"
+        fixture = Path.join folder, "test", "fixtures-cli", "exists.txt"
+        fixture_2 = Path.join folder, "test", "fixtures-cli", "doesnotexist.txt"
 
         Async.parallel [
             (callback) -> Utils.fileExists fixture, (exists) ->
@@ -102,7 +102,7 @@ module.exports =
             ], done
 
     'test_listFiles': (done) ->
-        fixture = Path.join package, "test", "fixtures-cli"
+        fixture = Path.join folder, "test", "fixtures-cli"
 
         Async.parallel [
             # Basic Case
@@ -118,7 +118,7 @@ module.exports =
         ], done
 
     'test_streamToBuffer': (done) ->
-        fixture = Path.join package, "test", "fixtures-cli", "exists.txt"
+        fixture = Path.join folder, "test", "fixtures-cli", "exists.txt"
         input = FS.createReadStream fixture
 
         Utils.streamToBuffer input, (err, buffer) ->
@@ -128,6 +128,6 @@ module.exports =
 
     'test_compressJs': (done) ->
         input = '(function(){var big; return big})();'
-        expected = '(function(){var a;return a})()'
+        expected = '(function(){var e;return e})()'
         Assert.equal Utils.compressJs(input), expected
         done()

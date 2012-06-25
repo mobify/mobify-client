@@ -323,8 +323,8 @@ exports.getVersion = getVersion = () ->
 
     path = scaffoldPath = Path.join __dirname, "..", "package.json"
     package_json = FS.readFileSync(path, encoding='utf8')
-    package = JSON.parse(package_json)
-    version = package.version
+    package_obj = JSON.parse(package_json)
+    version = package_obj.version
 
 ###
 Returns the User-Agent/Server of the tools
