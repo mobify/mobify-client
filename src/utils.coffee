@@ -199,6 +199,13 @@ exports.fileExists = fileExists = (path, callback) ->
         else
             callback false
 
+exports.fileExistsSync = fileExistsSync = (path) ->
+    try
+        stat = FS.statSync path
+        stat.isFile()
+    catch err
+        false
+
 ###
 Checks if a path exists
 
@@ -212,7 +219,12 @@ exports.pathExists = pathExists = (path, callback) ->
         else
             callback true
 
-
+exports.pathExistsSync = pathExistsSync = (path) ->
+    try
+        FS.statSync path
+        true
+    catch err
+        false
 
 ###
 Reads a stream in to a buffer
