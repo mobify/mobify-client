@@ -4,7 +4,7 @@ Assert = require 'assert'
 Path = require 'path'
 
 Request = require 'request'
-Static = require 'node-static'
+Connect = require 'connect'
 
 {Project} = require '../src/project.coffee'
 {Environment} = require '../src/build.coffee'
@@ -20,9 +20,8 @@ TAG_PORT = 1340
 module.exports =
     # Tag server proxies the static server.
     'before': ->
-        static_handler = new Static.Server 'test/fixtures'
-        @static = HTTP.createServer (request, response) ->
-            static_handler.serve request, response
+        @static = new Connect()
+            .use(Connect.static "#{__dirname}/fixtures")
         @static.listen STATIC_PORT
 
         @tag = Injector.createServer {port: STATIC_PORT}
