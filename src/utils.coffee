@@ -199,6 +199,20 @@ exports.fileExists = fileExists = (path, callback) ->
         else
             callback false
 
+###
+Checks if a path exists
+
+@param {String} path
+@param {Function} callback
+###
+exports.pathExists = pathExists = (path, callback) ->
+    FS.stat path, (err, stats) =>
+        if err?
+            callback false                
+        else
+            callback true
+
+
 
 ###
 Reads a stream in to a buffer

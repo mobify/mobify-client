@@ -12,6 +12,7 @@ FStream = require 'fstream'
 Tar = require 'tar'
 Async = require 'async'
 CleanCSS = require 'clean-css'
+Wrench = require 'wrench'
 
 Utils = require './utils.coffee'
 
@@ -433,9 +434,18 @@ class Builder extends Events.EventEmitter
             else
                 console.log "Build Complete."
             callback(errors)
-        
-        @start()
-                              
+
+        # Delete build folder, if it exists
+        Utils.pathExists build_path, (exists) =>
+            if exists
+                try
+                    Wrench.rmdirSyncRecursive build_path, false
+                catch err
+                    console.log "Failed to delete build folder '#{build_path}'."
+                    return
+            
+            @start()
+                                  
 
     ###
     Excludes files from being built based on a pattern matching

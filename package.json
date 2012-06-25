@@ -13,7 +13,8 @@
     "uglify-js": "1.2.5",
     "clean-css": "0.4.1",
     "connect": "2.1.3",
-    "express": "2.5.9"
+    "express": "2.5.9",
+    "wrench": "~1.3.9"
   },
   "devDependencies": {
     "node-static": "0.5.8",
