@@ -18,7 +18,7 @@ correctly.
 ###
 HTTP = require 'http'
 
-Static = require 'node-static'
+Connect = require 'connect'
 
 Injector = require '../../src/injector.coffee'
 {Project} = require '../../src/project.coffee'
@@ -32,9 +32,8 @@ PREVIEW_PORT = 8080
 
 
 # Static Server
-static_handler = new Static.Server 'test/fixtures'
-@static = HTTP.createServer (request, response) ->
-    static_handler.serve request, response
+@static = new Connect()
+    .use(Connect.static "#{__dirname}/fixtures")
 @static.listen STATIC_PORT
 
 # Tag Server

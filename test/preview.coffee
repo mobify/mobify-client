@@ -6,7 +6,7 @@ HTTP = require 'http'
 Assert = require 'assert'
 
 Request = require 'request'
-Static = require 'node-static'
+Connect = require 'connect'
 
 {Project} = require '../src/project.coffee'
 {Environment} = require '../src/build.coffee'
@@ -20,9 +20,8 @@ PREVIEW_PORT = 1338
 module.exports =
     'before': (done) ->
         # Static Server
-        static_handler = new Static.Server 'test/fixtures'
-        @static = HTTP.createServer (request, response) ->
-            static_handler.serve request, response
+        @static = new Connect()
+            .use(Connect.static "#{__dirname}/fixtures")
         @static.listen STATIC_PORT
 
         generated = () ->
