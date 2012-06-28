@@ -1,0 +1,23 @@
+{>"/base/lib/base_konf.konf"/}
+
+// We don't need no templates.
+{<tmpl}{/tmpl}
+
+{<data} {
+
+'OUTPUTHTML': function(context) {
+    // Remove Scripts.
+    $('script').remove();
+
+    // Let me know.
+    $('h1').text('Mobified!');
+
+    var $html = context.data('$html')
+
+    $('body').append('<a href="#" onclick="document.cookie=\'mobify-path=; path=/\'; location.reload();">Optout</a>')
+
+    // Send it all back.
+    return $html.get(0).outerHTML;
+}
+
+} {/data}

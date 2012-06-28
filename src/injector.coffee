@@ -30,6 +30,9 @@ getTags = (opts, version) ->
     tags = {}
     path = Path.join appSourceDir, 'vendor', 'tags', version + '/'
     FS.readdirSync(path).forEach (filename) ->
+        if filename.indexOf('.html') is -1
+            return
+
         path = Path.join path, filename
         tags[Path.basename filename, '.html'] = FS.readFileSync(path).toString()
     tags
