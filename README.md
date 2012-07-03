@@ -14,7 +14,7 @@ https://github.com/mobify/mobifyjs
 
 * `mobify`: Print help text.
 
-* `mobify init <project_name>`: Create a new project from the scaffold. Project name should match the project name on Mobify.
+* `mobify init <project_name>`: Create a new project from the scaffold.
 
 * `mobify preview`: Runs a local server you can preview against.
         -h, --help                  output usage information
