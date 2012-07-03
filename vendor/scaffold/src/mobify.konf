@@ -1,23 +1,51 @@
 {>"/base/lib/base_konf.konf"/}
 {<data} {
+// Important: Change nothing above this point
+// -------------------------------------
 
-'content': function(context) {
-    return context.choose({
-        'templateName': 'home',
-        '!title': function(context) {
-            return $('title').text() 
-        }
-    })
+// Extract title for use in _header.tmpl
+'header': {
+    'title': function() {
+        return $('title').text() 
+    },
 },
 
-'script': function(context) {
+// Extract page content, which is different depending on the page being rendered
+'content': function(context) {
+    return context.choose(
+    {
+        'templateName': 'home',
+        '!firstp': function() {
+            return $('p').first().text() || "Could not find the first paragraph text in your page";
+        },
+    }
+    /*  // An example of another template object. Uncomment this block and change
+        // your selectors to be unique to the DOM for the template you want to use
+    ,{ 
+        'templateName': 'about',
+        '!phonenumber': function() {
+            return $('.selector_for_phone_number')
+        },
+        '!blurb': function() {
+            return $('.selector_for_blurb')
+        },
+    }*/
+    
+    )
+},
+
+// Remove all desktop site scripts (optional)
+'script': function() {
     return $('script').remove() 
 },
 
-'stylesheet': function(context) {
+// Remove all desktop site style (optional)
+'stylesheet': function() {
     return $('link[rel="stylesheet"]').remove() 
 },
 
+// -------------------------------------
+// Important: place nothing after this point unless you're sure you know what you're doing
 'OUTPUTHTML': function(context) {
     var templateName = context.data('content.templateName')
     if (templateName) {

@@ -37,8 +37,7 @@ program
             project = Project.load()
         catch err
             if err instanceof Errors.ProjectFileNotFound
-                console.log "Could not find your project. Make sure you are inside your project folder."
-                console.log "Visit https://cloud.mobify.com/docs/ for more information.\n"
+                console.log "Could not find your project. Please make sure you are inside your project folder."
                 console.log err.toString()
             else
                 console.log "Unexpected Error."
@@ -76,17 +75,25 @@ program
 
         console.log "Press <CTRL-C> to terminate."
 
-push = (options) ->
+program
+    .command('push')
+    .description('Builds and uploads the current project to Mobify Cloud.')
+    .option('-m, --message <message>', 'Message for bundle information')
+    .option('-l, --label <label>', 'Label the bundle')
+    .option('-t, --test', 'Do a test build, do not upload')
+    .option('-e, --endpoint <endpoint>', 'Set the API endpoint eg. https://cloud.mobify.com/api/')
+    .option('-u, --auth <auth>', 'Username and API Key eg. username:apikey')
+    .option('-p, --project <project>', 'Override the project name in project.json for the push destination')
+    .action (options) ->
         try
             project = Project.load()
         catch err
             if err instanceof Errors.ProjectFileNotFound
-                console.log "Could not find your project. Make sure you are inside your project folder."
-                console.log "Visit https://cloud.mobify.com/docs/ for more information.\n"
+                console.log "Could not find your project. Please make sure you are inside your project folder."
                 console.log err.toString()
             else
                 console.log "Unexpected Error."
-                console.log "Please report this error to https://cloud.mobify.com/support/\n"
+                console.log "Please report this error to https://support.mobify.com/\n"
                 console.log err.stack
             return
 
@@ -125,15 +132,31 @@ push = (options) ->
             getCredentials do_it
 
 program
-    .command('push')
-    .description('Uploads the contents of the working directory as a bundle.')
-    .option('-m, --message <message>', 'Message for bundle information')
-    .option('-l, --label <label>', 'Label the bundle')
-    .option('-t, --test', 'Do a test build, do not upload')
-    .option('-e, --endpoint <endpoint>', 'Set the API endpoint eg. https://cloud.mobify.com/api/')
-    .option('-u, --auth <auth>', 'Username and API Key eg. username:apikey')
-    .option('-p, --project <project>', 'Override the project for a build')
-    .action push
+    .command('build')
+    .description('Builds your project and places it into a bld folder')
+    .action (options) ->
+        try
+            project = Project.load()
+        catch err
+            if err instanceof Errors.ProjectFileNotFound
+                console.log "Could not find your project. Please make sure you are inside your project folder."
+                console.log err.toString()
+            else
+                console.log "Unexpected Error."
+                console.log "Please report this error to https://support.mobify.com/\n"
+                console.log err.stack
+            return
+
+        options.test = true
+
+        project.build options, (err, url, body) ->
+            if err
+                console.log err
+                process.exit 1
+                return
+
+            console.log "See #{url}/"
+
 
 program
     .command('login')
