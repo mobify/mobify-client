@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fulminus Venite</title>
+    <style>
+    	body { margin: 0; }
+    	button { float: left; font-size: 18px; font-weight: bold; width: 160px; height: 32px; margin-left: 2px; margin-top: 2px;}
+    	iframe { position: absolute; left: 2px; top: 36px;
+    		width: 320px; height: 480px; border: 1px solid #999; }
+    	textarea#testLog { float: left; margin-left: 2px; height: 514px; margin-top: 2px; width: 320px; padding: 0 2px; font-family: monospace; }
+    	body.running button { pointer-events: none; color: #999; }
+    </style>
+</head>
+<body>
+	<button id="integration" onclick="window.nextTest(false)">Integration</button>
+	<button id="performance" onclick="window.nextTest(true)">Performance</button>
+	<textarea id="testLog" style=""></textarea>
+
+<script defer="defer" src="run-tests.js"></script>
+
+</body>
+</html>
