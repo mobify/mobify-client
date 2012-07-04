@@ -1,0 +1,9 @@
+{
+    "name": "test/00.identity",
+    "api": "1.1",
+    "build_directory": "bld",
+    "plugins": [],
+    "exclude": [
+        "*.tmpl"
+    ]
+}
