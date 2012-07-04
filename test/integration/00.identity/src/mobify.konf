@@ -1,9 +1,0 @@
-{>"/base/lib/base_konf.konf"/}
-{<tmpl}{/tmpl}
-{<data} {
-
-'OUTPUTHTML': function(context) {
-    return context.data('$html').prop('outerHTML')
-}
-
-} {/data}

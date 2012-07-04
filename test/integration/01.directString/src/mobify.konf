@@ -1,9 +1,0 @@
-{>"/base/lib/base_konf.konf"/}
-{<tmpl}{/tmpl}
-{<data} {
-
-'OUTPUTHTML': function(context) {
-    return '<!DOCTYPE><html><head><title>katze</title></head><body>katze</body></html>'
-}
-
-} {/data}
