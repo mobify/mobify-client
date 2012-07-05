@@ -1,5 +1,5 @@
 {>"/base/lib/base_konf.konf"/}
-{<data} {
+{<konf} {
 // Important: Change nothing above this point
 // -------------------------------------
 
@@ -51,4 +51,4 @@
     }
 }
 
-} {/data}
+} {/konf}
