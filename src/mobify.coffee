@@ -37,11 +37,11 @@ program
             project = Project.load()
         catch err
             if err instanceof Errors.ProjectFileNotFound
-                console.log "Could not find your project. Please make sure you are inside your project folder."
+                console.log "Could not find project.json. Ensure you are working inside the project folder."
                 console.log err.toString()
             else
                 console.log "Unexpected Error."
-                console.log "Please report this error to https://cloud.mobify.com/support/\n"
+                console.log "Please report this error at https://support.mobify.com/\n"
                 console.log err.stack
             return
     
@@ -78,22 +78,22 @@ program
 program
     .command('push')
     .description('Builds and uploads the current project to Mobify Cloud.')
-    .option('-m, --message <message>', 'Message for bundle information')
-    .option('-l, --label <label>', 'Label the bundle')
-    .option('-t, --test', 'Do a test build, do not upload')
-    .option('-e, --endpoint <endpoint>', 'Set the API endpoint eg. https://cloud.mobify.com/api/')
-    .option('-u, --auth <auth>', 'Username and API Key eg. username:apikey')
-    .option('-p, --project <project>', 'Override the project name in project.json for the push destination')
+    .option('-m, --message <message>', 'message for bundle information')
+    .option('-l, --label <label>', 'label the bundle')
+    .option('-t, --test', 'do a test build, do not upload')
+    .option('-e, --endpoint <endpoint>', 'set the API endpoint eg. https://cloud.mobify.com/api/')
+    .option('-u, --auth <auth>', 'username and API Key eg. username:apikey')
+    .option('-p, --project <project>', 'override the project name in project.json for the push destination')
     .action (options) ->
         try
             project = Project.load()
         catch err
             if err instanceof Errors.ProjectFileNotFound
-                console.log "Could not find your project. Please make sure you are inside your project folder."
+                console.log "Could not find project.json. Ensure you are working inside the project folder."
                 console.log err.toString()
             else
                 console.log "Unexpected Error."
-                console.log "Please report this error to https://support.mobify.com/\n"
+                console.log "Please report this error at https://support.mobify.com/\n"
                 console.log err.stack
             return
 
@@ -139,11 +139,11 @@ program
             project = Project.load()
         catch err
             if err instanceof Errors.ProjectFileNotFound
-                console.log "Could not find your project. Please make sure you are inside your project folder."
+                console.log "Could not find project.json. Ensure you are working inside the project folder."
                 console.log err.toString()
             else
                 console.log "Unexpected Error."
-                console.log "Please report this error to https://support.mobify.com/\n"
+                console.log "Please report this error at https://support.mobify.com/\n"
                 console.log err.stack
             return
 

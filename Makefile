@@ -1,5 +1,10 @@
 TESTS = test/*.coffee
 
+install:
+	npm install
+	git submodule update --init --recursive
+
+
 all: 
 	archive
 

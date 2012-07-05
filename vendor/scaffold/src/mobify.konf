@@ -7,17 +7,16 @@
 'header': {
     'title': function() {
         return $('title').text() 
-    },
+    }
 },
 
 // Extract page content, which is different depending on the page being rendered
 'content': function(context) {
-    return context.choose(
-    {
-        'templateName': 'home',
-        '!firstp': function() {
+    return context.choose({
+        'templateName': 'home'
+      , '!firstp': function() {
             return $('p').first().text() || "Could not find the first paragraph text in your page";
-        },
+        }
     }
     /*  // An example of another template object. Uncomment this block and change
         // your selectors to be unique to the DOM for the template you want to use
@@ -30,7 +29,6 @@
             return $('.selector_for_blurb')
         },
     }*/
-    
     )
 },
 
@@ -39,13 +37,13 @@
     return $('script').remove() 
 },
 
-// Remove all desktop site style (optional)
+// Remove all desktop site stylesheets (optional)
 'stylesheet': function() {
     return $('link[rel="stylesheet"]').remove() 
 },
 
 // -------------------------------------
-// Important: place nothing after this point unless you're sure you know what you're doing
+// Important: Change nothing after this point unless you know what you are doing :)
 'OUTPUTHTML': function(context) {
     var templateName = context.data('content.templateName')
     if (templateName) {
