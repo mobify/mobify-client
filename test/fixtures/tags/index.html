@@ -11,7 +11,37 @@ Run the test server:
 
 http://127.0.0.1:1340/tags/index.html
 
-# Test Cases
+# OSS Test Cases
+
+Before running a test restart your browser.
+
+* Desktop
+    > Desktop browser.
+    - Shows the desktop site.
+    - Loads: desktop.js
+
+* Mobile with mobify.js.
+    > Mobile browser
+    > Tag serves mobify.js in detector function.
+    - Shows the mobile site.
+    - Loads: mobify.js
+
+* Mobile with broken mobify.js
+    > Mobile browser
+    > Tag serves broken/mobify.js in detector function.
+    - Shows blank page.
+    - Loads: broken-mobify.js, unmobify.js, desktop.js, [analytics.js?]
+
+* Mobile with opt-out.
+    > Mobile browser.
+    > Tag serves mobify.js in detector function.
+    - Same as "Mobile with mobify.js" on first load.
+    - Click "optout", shows the desktop site.
+    - Loads: desktop.js
+
+
+
+# Cloud Test Cases
 
 Before running a test restart your browser.
 
