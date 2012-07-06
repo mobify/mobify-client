@@ -1,18 +1,19 @@
 <script>
 this.Mobify || (function(detector, ajs) {
 
-this.Mobify = {ajs: ajs, points: [+new Date], tagVersion: [7, 1]};
+this.Mobify = {ajs: ajs, points: [new Date], tagVersion: [7, 2]};
 
-// Initial load and followup.
-// If src=1 or array ran out of elements, don't load.
-// If src=-1, total failure, set the opt out cookie.
-// Otherwise just load the script, and check if it was good once it is ready.
+// Pull a URL off load queue and try to load it. onload/onerror handlers will make sure that this function runs again after scripts loads or errors out, so we could keep trying sources until we run out. A successful load will set Mobify.api to version of MobifyJS API (or to 1, if version is not yet known).
+// We use two special sentinel values for src
+// If src=1, we behave as if our array ran out of elements and softly give up. This is used if we fail to load a supplementary file (e.g. analytics)
+// If src=-1, we failed to load an adaptation or a curative unmobify2.js. This means we are in big trouble, so we would prevent content capturing on subsequent loads via a cookie.
+
 function next() {
     src = paths.shift() || 1;
     if (Mobify.api || +src) {
-        ~src || (doc.cookie = mobifypath + '=; path=/');
+        ~src || (doc.cookie = sMobifyPath + '=; path=/');
     } else {
-        script = doc.createElement(sscript);
+        script = doc.createElement(sScript);
         script.src = src;
         script.onload = script.onerror = next;
         firstScript.parentNode.insertBefore(script, firstScript);
@@ -21,59 +22,26 @@ function next() {
 
 var doc = document
   , src = 1
-  , sscript = 'script'
-  , mobify = 'mobify'
-  , mobifycom = mobify + '.com/'
-  , mobifypath = mobify + '-path'
-  , unmobify = mobifycom + 'un' + mobify + '2.js'
+  , sScript = 'script'
+  , sMobify = 'mobify'
+  , sMobifyCom = sMobify + '.com/'
+  , sMobifyPath = sMobify + '-path'
+  , sUnmobify = sMobifyCom + 'un' + sMobify + '2.js'
   , script
-  , firstScript = doc.getElementsByTagName(sscript)[0]
-    // Paths should be of the form [<0/1>, :mobifyjs]
-  , paths
-    // First group is capturing solely because it is shorter to capture than not
-    // The second group can be used to check whether the match
-    // occured in the hash or the cookie (; is cookie).
-    // The third group is the value of `mobify-path`.
-  , matchedPath = /((; )|#|&|^)mobify-path=([^&;]*)/g.exec(location.hash + '; ' + doc.cookie);
+  , firstScript = doc.getElementsByTagName(sScript)[0]
+    // Paths should be of the form [<0/1>, url, url, ... ]. A url can be replaced with terminator value of 1 or -1 (described in next() comments)
+  , slicer = /(; )?mobify-path=([^;]*)/
+  , cookiePath = slicer.exec('; ' + doc.cookie + name) || 0
 
-// Cases:
-// OUT: mobify-path cookie/hash exists and is empty
-// DEV: mobify-path cookie/hash exists and has a vale
-// PRD: mobify-path cookie/hash does not exist
+  , paths = cookiePath[1]
+      && (src = cookiePath[2])
+      && !+(src = (slicer.exec(name) || 0)[2] || sessionStorage[sMobifyPath] || src)
+      && [1, '//preview.' + sMobifyCom + escape(src), 1];
 
+paths = paths || (src && detector()) || [0, ajs];
 
-// If `mobify-path` was found in the hash or cookie, 
-// then checkout for a user specified path to mobify.js.
-// If path was empty, don't load.
-// Otherwise ask the `detector` what to load and provide `unmobify` fallbacks.
-// Prioritize anchor over cookie and sessionStorage.
-
-// If paths leads with 1, we're mobifying.
-paths = matchedPath
-    // If `mobify-path` has a value, use it.
-    && (src = matchedPath[3])
-
-    // Here we'd expect src='//path/to/mobify.js' or src='1'
-    // If match was on cookie and sessionStorage is set use it.
-    // If match was on cookie and sessionStorage was not set, then fail.
-    // This handles the case were one browser tab is mobified and 
-    // the others are not.
-    && !+(src = matchedPath[2] && sessionStorage[mobifypath] || src)
-    // If we made it this far, we're previewing!
-    && [1, '//preview.' + mobifycom + escape(src), 1];
-
-
-// `src` will be false if and only if `mobify-path` was set to an empty value.
-
-// Allows `detector` to not return a value and still not mobify.
-src = src && detector();
-
-paths = paths || src || [0, ajs];
-
-// Load Mobify.js using `setTimeout` to foil the lookahead parser.
-// Otherwise load any provided fallback script.
 if (paths.shift()) {
-    paths.push('//cdn.' + unmobify, '//files01.' + unmobify, -1);
+    paths.push('//cdn.' + sUnmobify, '//files01.' + sUnmobify, -1);
     doc.write('<plaintext style="display:none">');
 }
 
