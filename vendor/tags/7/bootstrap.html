@@ -38,7 +38,8 @@ var doc = document
       && !+(src = (slicer.exec(name) || 0)[2] || sessionStorage[sMobifyPath] || src)
       && [1, '//preview.' + sMobifyCom + escape(src), 1];
 
-paths = paths || (src && detector()) || [0, ajs];
+src = src && detector();
+paths = paths || src || [0, ajs];
 
 if (paths.shift()) {
     paths.push('//cdn.' + sUnmobify, '//files01.' + sUnmobify, -1);
