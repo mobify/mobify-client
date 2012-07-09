@@ -80,3 +80,14 @@ File an issue!
 ### Running the tests
 
     make tests
+
+### Publish
+---------------------
+
+Note: you'll need to be an owner on NPM to publish.
+    
+    $ git status
+    (ensure clean working directory)
+    $ make archive
+    (creates archive mobify-client.v.x.x.x.tgz)
+    $ npm publish mobify-client.v.x.x.x.tgz
