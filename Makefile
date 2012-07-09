@@ -18,6 +18,9 @@ test:
         --ignore-leaks  \
         $(TESTS)
 
+integrate:
+	test/integration/runner.sh
+
 jenkins:
 	node ./node_modules/.bin/mocha \
         -u exports \

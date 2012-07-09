@@ -1,23 +1,15 @@
 ###
-Setup for Mobify.js integration tests.
 
-Usage:
-    mobify-client$ coffee test/integration/mobifyjs.coffee &
-    mobify-client$ phantomjs test/integration/phantom.coffee
+Setup the following for Mobify.js integration tests:
 
+1. A static server.
+2. A tag server.
+3. A preview server to serve the tag.
 
-To get ready to test Mobify.js, we need to put a few things in place.
-
-1. Start a Static server.
-2. Start a Tag server to tag content from Static.
-3. Start a Preview server to serve the Mobify.js for the tag!
-
-Phantom will hit the tag server and check that the scaffold adaptation runs
-correctly.
+Phantom.js will hits the tag server and ensures that the scaffold from the 
+preview server runs correctly.
 
 ###
-HTTP = require 'http'
-
 Connect = require 'connect'
 
 Injector = require '../../src/injector.coffee'
@@ -30,10 +22,8 @@ STATIC_PORT = 1341
 TAG_PORT = 1342
 PREVIEW_PORT = 8080
 
-
 # Static Server
-@static = new Connect()
-    .use(Connect.static "#{__dirname}/fixtures")
+@static = new Connect().use(Connect.static "#{__dirname}/../fixtures")
 @static.listen STATIC_PORT
 
 # Tag Server
@@ -51,7 +41,6 @@ scaffold_ready = () ->
     ready()
 
 Scaffold.generate 'test/fixtures-preview', null, scaffold_ready
-
 
 ready = () ->
     console.log "Static Server @ 127.0.0.1:#{STATIC_PORT}"
