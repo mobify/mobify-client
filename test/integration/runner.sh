@@ -1,5 +1,5 @@
 #!/bin/bash
-coffee test/integration/server.coffee &
+node_modules/.bin/coffee test/integration/server.coffee &
 PID=$!
 sleep 1
 phantomjs test/integration/phantom.coffee
