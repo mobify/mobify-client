@@ -1,11 +1,21 @@
+###
+
+Ensure the default scaffold 'mobifies' correctly.
+
+
+###
 TAG_SERVER_URL = "http://127.0.0.1:1342"
+
+
+exit = (status) ->
+    phantom.exit status
 
 page = new WebPage()
 page.settings.userAgent = "iPhone"
 page.open TAG_SERVER_URL, (status) ->
     if status isnt "success"
         console.log "Error: Could not open page."
-        return phantom.exit 1
+        return exit 1
 
     mobifyjs_ready = ->
         outerHTML = page.evaluate ->
@@ -13,6 +23,6 @@ page.open TAG_SERVER_URL, (status) ->
 
         needle = "Welcome to your first Mobify.js Mobile Page"
         status = if !!~outerHTML.indexOf needle then 0 else 1
-        phantom.exit status
+        exit status
 
-    setTimeout mobifyjs_ready, 1000
+    setTimeout mobifyjs_ready, 5000
