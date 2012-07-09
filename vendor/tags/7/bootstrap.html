@@ -42,7 +42,7 @@ setTimeout(next);
 
 })(function() {
     if (/ip(hone|od|ad)|android|blackberry.*applewebkit/i.test(navigator.userAgent)) {
-        return [1, 'http://localhost:8080/mobify.js']
+        return [1, '{{ mobifyjsPath }}']
     }
 });
 </script>

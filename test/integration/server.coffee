@@ -20,7 +20,7 @@ Scaffold = require '../../src/scaffold.coffee'
 
 STATIC_PORT = 1341
 TAG_PORT = 1342
-PREVIEW_PORT = 8080
+PREVIEW_PORT = 1343
 
 # Static Server
 @static = new Connect().use(Connect.static "#{__dirname}/../fixtures")
@@ -29,7 +29,7 @@ PREVIEW_PORT = 8080
 # Tag Server
 @tag = Injector.createServer
             port: STATIC_PORT
-            siteFolderPath: 'http://127.0.0.1:#{PREVIEW_PORT}'
+            mobifyjsPath: "http://127.0.0.1:#{PREVIEW_PORT}/mobify.js"
 @tag.listen TAG_PORT
 
 # Preview Server
