@@ -21,8 +21,8 @@ module.exports =
         Mobify.build {}, () ->
             bld_path = Path.join project_path, 'bld'
             FS.lstat bld_path, (err, stats) ->
-                Assert !err && stats.isDirectory()
                 process.chdir cwd
+                Assert !err && stats.isDirectory()
                 Utils.rmDir bld_path
                 done()
     
@@ -43,7 +43,7 @@ module.exports =
 
         postPreview = () ->
             Request "http://127.0.0.1:#{port}/mobify.js", (err, response) ->
-                # Assert not response.headers['X-Error'], 'Should not be an error.'
+                process.chdir cwd
                 Assert !err and response.statusCode == 200 and not /Mobify\.js\sError/.test(response.body)
                 done()
 
