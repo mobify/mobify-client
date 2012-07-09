@@ -14,25 +14,10 @@ Utils = require './utils'
 Errors = require './errors'
 
 
-program
-    .version(Utils.getVersion())
+init = (project_name, options, callback) ->
+        Scaffold.generate(project_name, options.directory, callback)
 
-program
-    .command('init <project_name>')
-    .description('Initializes a project scaffold.')
-    .option('-d, --directory <dir>', 'Directory to pull the project scaffold from')
-    .action (project_name, options) ->
-        Scaffold.generate(project_name, options.directory)
-
-program
-    .command('preview')
-    .description('Runs a local server you can preview against.')
-    .option('-p, --port <port>', 'port to bind to [8080]', parseInt, 8080)
-    .option('-a, --address <address>', 'address to bind to [0.0.0.0]', '0.0.0.0')
-    .option('-m, --minify', 'enable minification')
-    .option('-t, --tag', 'runs a tag injecting proxy, requires sudo')
-    .option('-u, --tag-version <version>', 'version of the tags to use [6]', parseInt, 6)
-    .action (options) ->
+preview = (options) ->
         try
             project = Project.load()
         catch err
@@ -75,16 +60,7 @@ program
 
         console.log "Press <CTRL-C> to terminate."
 
-program
-    .command('push')
-    .description('Builds and uploads the current project to Mobify Cloud.')
-    .option('-m, --message <message>', 'message for bundle information')
-    .option('-l, --label <label>', 'label the bundle')
-    .option('-t, --test', 'do a test build, do not upload')
-    .option('-e, --endpoint <endpoint>', 'set the API endpoint eg. https://cloud.mobify.com/api/')
-    .option('-u, --auth <auth>', 'username and API Key eg. username:apikey')
-    .option('-p, --project <project>', 'override the project name in project.json for the push destination')
-    .action (options) ->
+push = (options) ->
         try
             project = Project.load()
         catch err
@@ -131,10 +107,7 @@ program
         else
             getCredentials do_it
 
-program
-    .command('build')
-    .description('Builds your project and places it into a bld folder')
-    .action (options) ->
+build = (options, callback) ->
         try
             project = Project.load()
         catch err
@@ -157,12 +130,10 @@ program
 
             console.log "See #{url}/"
 
-
-program
-    .command('login')
-    .description('Saves credentials to global settings.')
-    .option('-u, --auth <auth>', 'Username and API Key eg. username:apikey')
-    .action (options) ->
+            if callback
+                callback()
+    
+login = (options, callback) ->
         save_credentials = (username, api_key) ->
             Utils.getGlobalSettings (err, settings) ->
                 settings.username = username
@@ -171,6 +142,8 @@ program
                     if err
                         console.log err
                     console.log "Credentials saved to: #{Utils.getGlobalSettingsPath()}"
+                    if callback
+                        callback()
 
         if options.auth
             [username, api_key] = options.auth.split ':'
@@ -230,6 +203,49 @@ promptCredentials = (callback) ->
         # once it's destroyed, it's gone.
         process.stdin.destroy()
 
+program
+    .version(Utils.getVersion())
+
+program
+    .command('init <project_name>')
+    .description('Initializes a project scaffold.')
+    .option('-d, --directory <dir>', 'Directory to pull the project scaffold from')
+    .action init
+
+program
+    .command('preview')
+    .description('Runs a local server you can preview against.')
+    .option('-p, --port <port>', 'port to bind to [8080]', parseInt, 8080)
+    .option('-a, --address <address>', 'address to bind to [0.0.0.0]', '0.0.0.0')
+    .option('-m, --minify', 'enable minification')
+    .option('-t, --tag', 'runs a tag injecting proxy, requires sudo')
+    .option('-u, --tag-version <version>', 'version of the tags to use [6]', parseInt, 6)
+    .action preview
+    
+
+program
+    .command('push')
+    .description('Builds and uploads the current project to Mobify Cloud.')
+    .option('-m, --message <message>', 'message for bundle information')
+    .option('-l, --label <label>', 'label the bundle')
+    .option('-t, --test', 'do a test build, do not upload')
+    .option('-e, --endpoint <endpoint>', 'set the API endpoint eg. https://cloud.mobify.com/api/')
+    .option('-u, --auth <auth>', 'username and API Key eg. username:apikey')
+    .option('-p, --project <project>', 'override the project name in project.json for the push destination')
+    .action push
+
+program
+    .command('build')
+    .description('Builds your project and places it into a bld folder')
+    .action build
+
+program
+    .command('login')
+    .description('Saves credentials to global settings.')
+    .option('-u, --auth <auth>', 'Username and API Key eg. username:apikey')
+    .action login
+
+
 program.on '*', (command) ->
     console.log "Unknown command: '#{command}'."
     console.log "Get help and usage information with: mobify --help"
@@ -239,3 +255,9 @@ program.parse process.argv
 # Print help if no command was given
 if process.argv.length < 3
     process.stdout.write program.helpInformation()
+
+exports.init = init
+exports.preview = preview
+exports.build = build
+exports.push = push
+exports.login = login

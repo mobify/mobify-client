@@ -21,6 +21,7 @@ test:
         -u exports \
         --compilers coffee:coffee-script \
         --ignore-leaks  \
+        --timeout 10000  \
         $(TESTS)
 
 jenkins:
@@ -29,6 +30,7 @@ jenkins:
         -R xunit \
         --compilers coffee:coffee-script \
         --ignore-leaks  \
+        --timeout 10000  \
         $(TESTS) | grep '<*>' | tee report.xml
 
 .PHONY: test
