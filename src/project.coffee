@@ -82,7 +82,7 @@ class Project
                 callback new Error("There were some errors during the build.")
                 return
 
-            if options.test
+            if not options.upload
                 callback null, @build_directory
                 return
 

@@ -312,7 +312,7 @@ Returns an object literal parsed from the settings file.
 ###
 exports.getGlobalSettings = getMobifySettings = (callback) ->
     path = getGlobalSettingsPath()
-    Path.exists path, (exists) ->
+    pathExists path, (exists) ->
         if exists
             FS.readFile path, (err, data) ->
                 if err
@@ -331,7 +331,7 @@ exports.getGlobalSettings = getMobifySettings = (callback) ->
 exports.setGlobalSettings = setGlobalSettings = (data, callback) ->
     path = getGlobalSettingsPath()
     data = JSON.stringify data, null, 4
-    Path.exists path, (exists) ->
+    pathExists path, (exists) ->
         if not exists
             directory = Path.dirname 'path'
             makeDirectorySync directory
