@@ -30,7 +30,6 @@ program
     .description('Builds and uploads the current project to Mobify Cloud.')
     .option('-m, --message <message>', 'message for bundle information')
     .option('-l, --label <label>', 'label the bundle')
-    .option('-t, --test', 'do a test build, do not upload')
     .option('-e, --endpoint <endpoint>', 'set the API endpoint eg. https://cloud.mobify.com/api/')
     .option('-u, --auth <auth>', 'username and API Key eg. username:apikey')
     .option('-p, --project <project>', 'override the project name in project.json for the push destination')

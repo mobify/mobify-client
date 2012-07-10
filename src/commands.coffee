@@ -33,7 +33,7 @@ exports.preview = preview = (options) ->
         if options.minify
             environment.production = true
 
-        server = Preview.createServer(environment)
+        server = Preview.createServer environment
         server.listen options.port, options.address
         console.log "Running Preview at address #{options.address} and port #{options.port}"
         
@@ -70,6 +70,8 @@ exports.push = push = (options) ->
                 console.log "Please report this error at https://support.mobify.com/\n"
                 console.log err.stack
             return
+        
+        options.upload = true
 
         do_it = (err, credentials) ->
             if err
@@ -86,16 +88,11 @@ exports.push = push = (options) ->
                     process.exit 1
                     return
 
-                if options.test
-                    console.log "See #{url}/"
-                else
-                    console.log "Bundle Uploaded."
-                    if body and body.message
-                        console.log body.message
+                console.log "Bundle Uploaded."
+                if body and body.message
+                    console.log body.message
 
-        if options.test
-            do_it()
-        else if options.auth
+        if options.auth
             [user, password] = options.auth.split ':'
             credentials =
                 user: user
@@ -118,7 +115,7 @@ exports.build = build = (options, callback) ->
                 console.log err.stack
             return
 
-        options.test = true
+        options.upload = false
 
         project.build options, (err, url, body) ->
             if err
@@ -126,7 +123,7 @@ exports.build = build = (options, callback) ->
                 process.exit 1
                 return
 
-            console.log "See #{url}/"
+            console.log "Project built successfully in #{url}/"
 
             if callback
                 callback()
