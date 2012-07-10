@@ -24,7 +24,6 @@ The Mobify Client is a command line tool for building and deploying Mobify.js pr
         -h, --help                 output usage information
         -m, --message <message>    message for build information
         -l, --label <label>        label the build
-        -t, --test                 do a test build, do not upload
         -e, --endpoint <endpoint>  set the API endpoint
         -u, --auth <auth>          username and API Key
         -p, --project <project>    override the project name for push endpoint
