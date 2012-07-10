@@ -369,18 +369,3 @@ exports.compressJs = compressJs = (js) ->
     ast = Uglify.uglify.ast_mangle ast
     ast = Uglify.uglify.ast_squeeze ast
     Uglify.uglify.gen_code ast
-
-
-exports.rmDir = rmDir = (dirPath) ->
-    try 
-        files = FS.readdirSync dirPath
-    catch e 
-        return
-    if files.length > 0
-        for file in files
-            filePath = dirPath + '/' + file;
-            if FS.statSync(filePath).isFile()
-                FS.unlinkSync filePath
-            else
-                rmDir filePath
-    FS.rmdirSync dirPath

@@ -6,6 +6,7 @@ Path = require 'path'
 Assert = require 'assert'
 
 Request = require 'request'
+Wrench = require 'wrench'
 
 Commands = require '../src/commands.coffee'
 Utils = require '../src/utils.coffee'
@@ -23,7 +24,7 @@ module.exports =
             FS.lstat bld_path, (err, stats) ->
                 process.chdir cwd
                 Assert !err && stats.isDirectory()
-                Utils.rmDir bld_path
+                Wrench.rmdirSyncRecursive bld_path
                 done()
     
     'test-init': (done) ->
@@ -31,7 +32,7 @@ module.exports =
             project_path = Path.join process.cwd(), 'test-project'
             FS.lstat project_path, (err, stats) ->
                 Assert !err && stats.isDirectory()
-                Utils.rmDir project_path
+                Wrench.rmdirSyncRecursive project_path
                 done()
             
     'test-preview': (done) ->
