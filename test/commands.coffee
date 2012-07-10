@@ -4,7 +4,6 @@ Tests for src/mobify.coffee, testing command line entry points
 FS = require 'fs'
 Path = require 'path'
 Assert = require 'assert'
-
 Request = require 'request'
 Wrench = require 'wrench'
 

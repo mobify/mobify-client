@@ -3,6 +3,7 @@ Path = require 'path'
 HTTPS = require 'https'
 program = require 'commander'
 Async = require 'async'
+Wrench = require 'wrench'
 
 {appSourceDir} = require '../lib/pathUtils'
 {Project} = require './project.coffee'
@@ -83,6 +84,10 @@ exports.push = push = (options) ->
                 options.password = credentials.password
 
             project.build options, (err, url, body) ->
+                if Utils.pathExistsSync project.build_directory 
+                    console.log "Removing #{project.build_directory}"
+                    Wrench.rmdirSyncRecursive project.build_directory
+
                 if err
                     console.log err
                     process.exit 1
