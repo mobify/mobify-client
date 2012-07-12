@@ -4,19 +4,18 @@
     <title>Fulminus Venite</title>
     <style>
     	body { margin: 0; }
-    	button { float: left; font-size: 18px; font-weight: bold; width: 160px; height: 32px; margin-left: 2px; margin-top: 2px;}
-    	iframe { position: absolute; left: 2px; top: 36px;
-    		width: 320px; height: 480px; border: 1px solid #999; }
-    	textarea#testLog { float: left; margin-left: 2px; height: 514px; margin-top: 2px; width: 320px; padding: 0 2px; font-family: monospace; }
-    	body.running button { pointer-events: none; color: #999; }
+    	iframe { position: absolute; top: 2px; left: 2px;
+            width: 320px; height: 480px; border: 1px solid #999; }
+        #qunit { margin: 2px 2px 2px 326px; display: none;}
     </style>
+    <link rel="stylesheet" href="qunit/qunit-1.9.0.css" type="text/css" media="screen">
+    <script type="text/javascript" src="qunit/qunit-1.9.0.js"></script>      
 </head>
 <body>
-	<button id="integration" onclick="window.nextTest(false)">Integration</button>
-	<button id="performance" onclick="window.nextTest(true)">Performance</button>
-	<textarea id="testLog" style=""></textarea>
+    <div id="qunit"></div>
 
-<script defer="defer" src="run-tests.js"></script>
-
+    <script src="benchmark.js"></script>
+    <script src="analyzeDeltas.js"></script>
+    <script defer="defer" src="run-tests.js"></script>
 </body>
 </html>

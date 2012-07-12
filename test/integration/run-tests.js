@@ -1,71 +1,92 @@
-var tests = location.search.replace(/^\?tests=/,'').split('+');
-var log = document.getElementById('testLog');
-var Repeat = 5, repeat;
-var iter = 0;
-var perf = [];
-var innerWin, test;
-var result = {};
+(function() {
 
-window.addEventListener('message', function(ev) {
-	if (ev.data != "ready" || ev.source != innerWin) throw new Error("Wrong message or origin");
-	if (repeat > 1) {
-		result[test] = result[test] || [];
-		result[test].push(innerWin.Mobify.timing.points);
-		window.complete();
-	} else {
-		var script = document.createElement('script');
-		var firstScript = document.getElementsByTagName('script')[0];
-		script.src = test + '.js';
-		firstScript.parentNode.insertBefore(script, firstScript);
-	}
+window.log = function(value) {
+	results.push(value);
+	console.log(value);
+};
 
+var tests = location.search.match(/(^\?|&)tests=([^&]*)/,'')[2].split('+')
+  , mode = location.search.match(/(^\?|&)mode=([^&]*)/,'')[2]
+  , remainingTests = tests.slice()
+  , iframe = document.createElement('iframe')
+  , results = []
+  , advance;
+
+window.addEventListener('message', function (ev) {
+	if (ev.data != "ready" || ev.source != iframe.contentWindow)
+		throw new Error("Wrong message or origin");
+	
+	advance();
 }, false);
 
-window.nextTest = function(testPerf) {
-	if (typeof testPerf == "boolean") {
-		repeat = testPerf ? Repeat : 1;
-		document.body.className += 'running';
-	}
+document.body.appendChild(iframe);
+iframe.addEventListener("load", function() {
+	function inject() {
+		var old = document.close;
+		if (old.toString().match('postMessage')) return;
 
-	if (iter == 0) {
-		test = tests.shift();
-		if (!test) {
-			log.innerHTML += "\nCompleted test harness";
-			console.log(result);
+		document.close = function () {
+			parent.postMessage('ready', '*');
+			return old.apply(this, arguments);
+		}
+	}
+	iframe.contentWindow.eval('(' + inject + ')()');
+}, false);
+
+if (mode == 'performance') {
+	var runTest = function() {
+		if (!remainingTests.length) {
+			var request = new XMLHttpRequest();
+			request.open('POST', '/submit', true);  
+			request.send(results.join('\n'));
 			return;
-		} else {
-			log.innerHTML += "\nRunning test " + test + (repeat > 1 ? " x" + repeat : '') + '... ';
 		}
-	}
 
-	iter = ++iter % repeat;
+		var testName = remainingTests.shift()
+		  , timingPoints = []
+		  , deferred
+		  , suite = new Benchmark.Suite();
 
-	var iframe = document.createElement('iframe');
-	iframe.src = '/start/' + test + '?redir=/tag/' + test + '.html';
-	document.body.appendChild(iframe);
-	
-	innerWin = iframe.contentWindow;
-	innerWin.addEventListener("load", function() {
-		var injectable = function() {
-			var old = document.close;
-			document.close = function () {
-				parent.postMessage('ready', '*');
-				return old.apply(this, arguments);
-			}
-		}
-		innerWin.eval('(' + injectable + ')()');
-	}, false);
-}
+		advance = function() {
+			var MobifyObj = iframe.contentWindow.Mobify;
+			MobifyObj && MobifyObj.timing && timingPoints.push(MobifyObj.timing.points);
+			
+			deferred
+				? (deferred.resolve(), deferred = undefined)
+				: suite.run({async: true});
+		};
+		iframe.src = '/start/' + testName;
 
-window.complete = function(ex) {
-	if (!ex) {
-		log.innerHTML += "+";
-		var iframe = document.getElementsByTagName('iframe')[0];
-		if (iframe) iframe.parentNode.removeChild(iframe);
-		window.nextTest();
-	} else {
-		debugger;
-		log.innerHTML += "Failed\n" + ex.message;
-	}
-	
-}
+		suite.add(testName, { initCount: 1, minSamples: 250, defer: true, fn: function(defer) {
+			deferred = defer;
+			iframe.src = '/tag/' + mode + '/' + testName + '.html?' + +new Date;
+		}}).on('cycle', function(event) {
+			log(String(event.target));
+		}).on('complete', function() {
+			window.analyzeDeltas(timingPoints);			
+			runTest();
+		})
+	};
+	runTest();
+} else {
+	document.getElementById("qunit").style.display = "block";
+	tests.forEach(function(testName) {
+		asyncTest(testName, function() {
+			var ready;
+			advance = function() {
+				if (ready) {
+					var script = document.createElement('script');
+					var firstScript = document.getElementsByTagName('script')[0];
+					script.src = mode + '/' + testName + '.js';
+					firstScript.parentNode.insertBefore(script, firstScript);					
+				} else {
+					iframe.src = '/tag/' + mode + '/' + testName + '.html?' + +new Date;
+					ready = true;
+				}
+			}			
+			iframe.src = '/start/' + testName;
+		});
+	});	
+};
+
+})();

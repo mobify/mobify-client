@@ -6,12 +6,10 @@ try {
 	request.open('GET', '/end', false);  
 	request.send();
 	
-	if (request.responseText.split('\n').length != 2)
-		throw new Error('Resource leak');
-
-	window.complete();
+	ok(request.responseText.split('\n').length == 2, "resource leak")
+	start();
 } catch (ex) {
-	window.complete(ex);
+	ok(false, 'unexpected exception')
 }
 
 })();
