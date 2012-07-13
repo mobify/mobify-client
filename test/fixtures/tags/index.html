@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--
+
+# Usage: 
+
+Run the test server:
+
+    $ coffee test/tag.coffee
+
+http://127.0.0.1:1340/tags/index.html
+
+# OSS Test Cases
+
+Before running a test restart your browser.
+
+* Desktop
+    > Desktop browser.
+    - Shows the desktop site.
+    - Loads: desktop.js
+
+* Mobile with mobify.js.
+    > Mobile browser
+    > Tag serves mobify.js in detector function.
+    - Shows the mobile site.
+    - Loads: mobify.js
+
+* Mobile with broken mobify.js
+    > Mobile browser
+    > Tag serves broken/mobify.js in detector function.
+    - Shows blank page.
+    - Loads: broken-mobify.js, unmobify.js, desktop.js, [analytics.js?]
+
+* Mobile with opt-out.
+    > Mobile browser.
+    > Tag serves mobify.js in detector function.
+    - Same as "Mobile with mobify.js" on first load.
+    - Click "optout", shows the desktop site.
+    - Loads: desktop.js
+
+
+
+# Cloud Test Cases
+
+Before running a test restart your browser.
+
+* Desktop, without fallback script.
+    > Desktop browser.
+    - Shows the desktop site.
+    - Loads: desktop.js
+
+* Desktop, with a fallback script.
+    > Desktop browser.
+    > Tag serves a fallback script, analytics.js.
+    - Shows the desktop site.
+    - Loads: desktop.js, analytics.js
+
+* Mobile with mobify.js.
+    > Mobile browser
+    > Tag serves mobify.js in detector function.
+    - Shows the mobile site.
+    - Loads: mobify.js
+
+* Mobile with broken mobify.js
+    > Mobile browser
+    > Tag serves broken/mobify.js in detector function.
+    - Shows the desktop site.
+    - Loads: broken-mobify.js, unmobify.js, desktop.js, [analytics.js?]
+
+* Mobile with total failure.
+    > Mobile browser
+    > Tag serves broken/mobify.js in detector function.
+    > unmobify fallback scripts must not load
+    - Shows a blank screen on first load. Desktop on second.
+    - Loads: broken/mobify.js, unmobify.js x2, on reload desktop.js
+
+* Mobile with opt-out.
+    > Mobile browser.
+    > Tag serves mobify.js in detector function.
+    - Same as "Mobile with mobify.js" on first load.
+    - Click "optout", shows the desktop site.
+    - Loads: desktop.js
+
+* Dev with working `mobify.js`.
+    > Desktop browser
+    > Preview: https://preview.mobify.com/?url=http%3A%2F%2F127.0.0.1%3A1340%2F&site_folder=127.0.0.1%3A1338
+    - Loads: preview.mobify.com, mobify.js
+
+* Dev with broken `mobify.js`
+    > Desktop browser
+    > Preview: https://preview.mobify.com/?url=http%3A%2F%2F127.0.0.1%3A1340%2F&site_folder=127.0.0.1%3A1338%2Fbroken%2F
+    - Blank screen
+    - Loads: broken/mobify.js
+
+-->
+    <title>Tag Test</title>
+    <script src="/tags/desktop.js"></script>
+</head>
+<body>
+    <h1>Tag Test</h1>
+</body>
+</html>

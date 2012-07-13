@@ -1,0 +1,24 @@
+<script>
+(function(window, document, mjs) {
+
+window.Mobify = {points: [+new Date], tagVersion: [1, 0]};
+
+var isMobile = /ip(hone|od|ad)|android|blackberry.*applewebkit/i.test(navigator.userAgent)
+  , optedOut = /mobify-path=($|;)/.test(document.cookie);
+
+if (!isMobile || optedOut) {
+    return 
+}
+
+document.write('<plaintext style="display:none">');
+
+setTimeout(function() {
+    var mobifyjs = document.createElement('script')
+      , script = document.getElementsByTagName('script')[0];
+
+    mobifyjs.src = mjs;
+    script.parentNode.insertBefore(mobifyjs, script);
+});
+
+})(this, document, '{{ mobifyjsPath }}');
+</script>

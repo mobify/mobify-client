@@ -300,7 +300,7 @@ class Environment extends Events.EventEmitter
 
 KonfHandler = (path, callback) ->
     # bootstrap for old api, clientTransform for newest changes, both here for backwards compatibility
-    compile path, callback,
+    compile path, @paths.concat(@base_path), callback,
         bootstrap: true,
         clientTransform: true,
         base: @base_path,

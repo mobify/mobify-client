@@ -21,11 +21,12 @@ exports.preview = preview = (options) ->
             project = Project.load()
         catch err
             if err instanceof Errors.ProjectFileNotFound
-                console.log "Could not find project.json. Ensure you are working inside the project folder."
+                console.log "Could not find your project. Make sure you are inside your project folder."
+                console.log "Visit https://cloud.mobify.com/docs/ for more information.\n"
                 console.log err.toString()
             else
                 console.log "Unexpected Error."
-                console.log "Please report this error at https://support.mobify.com/\n"
+                console.log "Please report this error to https://cloud.mobify.com/support/\n"
                 console.log err.stack
             return
     
