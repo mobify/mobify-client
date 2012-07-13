@@ -83,6 +83,8 @@ File an issue!
 ### Publish
 ---------------------
 
+Make sure you modify the changelog.
+
 Note: you'll need to be an owner on NPM to publish.
     
     $ git status
