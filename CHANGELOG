@@ -1,4 +1,8 @@
 v0.3.7  - Provides 'project_name' template variable when compiling mobify.js
+        - Updates Zepto
+        - Image resizer now reports 'project_name'
+        - Adds Debug flag. Will always give debugging output when using
+          `mobify preview`
 
 v0.3.6  - Adds `mobify build` command
         - Removes bld folder after a push
