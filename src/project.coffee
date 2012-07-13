@@ -61,7 +61,7 @@ class Project
 
     getEnv: (production=false) ->
         @loadPlugins()
-        new Environment(@source_directory, @base_directory, production)
+        new Environment(@source_directory, @base_directory, @name, production)
 
     build: (options, callback) ->
         ###
