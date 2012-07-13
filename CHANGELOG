@@ -1,3 +1,5 @@
+v0.3.7  - Provides 'project_name' template variable when compiling mobify.js
+
 v0.3.6  - Adds `mobify build` command
         - Removes bld folder after a push
         - Adds tests for command line functions

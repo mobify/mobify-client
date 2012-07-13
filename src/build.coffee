@@ -75,13 +75,14 @@ class Environment extends Events.EventEmitter
         handlers.push handler
         @post_processors[ext] = handlers
 
-    constructor: (paths, base_path, production=false) ->
+    constructor: (paths, base_path, project_name, production=false) ->
         if paths instanceof Array
             @paths = paths
         else
             @paths = [paths]
         @base_path = base_path
         @production = production
+        @project_name = project_name
 
     ###
     Class Property Accessors
@@ -141,7 +142,7 @@ class Environment extends Events.EventEmitter
     ###
     Gives a full path given a source path. `path` must be inside `@paths`.
 
-    Returns the fist match in @paths that exists.
+    Returns the first match in @paths that exists.
 
     @param {String} path
     @param {Function} callback
@@ -299,8 +300,12 @@ class Environment extends Events.EventEmitter
 
 KonfHandler = (path, callback) ->
     # bootstrap for old api, clientTransform for newest changes, both here for backwards compatibility
-    compile path, callback, {bootstrap: true, clientTransform: true, base: @base_path}
-
+    compile path, callback, {
+        bootstrap: true,
+        clientTransform: true,
+        base: @base_path,
+        project_name: @project_name
+    }
 
 
 JSMinifyPostProcessor = (data, callback) ->
