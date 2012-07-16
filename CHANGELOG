@@ -1,3 +1,5 @@
+v0.3.8  - Fixes Windows path issue introduced in v0.3.7
+
 v0.3.7  - Provides 'project_name' template variable when compiling mobify.js
         - Updates Zepto
         - Image resizer now reports 'project_name'
