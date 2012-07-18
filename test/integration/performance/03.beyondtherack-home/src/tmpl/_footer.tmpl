@@ -1,0 +1,68 @@
+{#footer}
+    {^isCart}
+	{?isLoggedIn}
+	
+	<div class="x-backtotop">
+		<a id="x-backtotop-link" href="#"><span>Back to Top</span></a>
+	</div>
+	
+	<nav class="x-category-nav">
+		{>_categorynav/}
+	</nav>
+	
+	{?isCart}
+	
+	{:else}
+	
+	<div class="x-row">
+        <div class="x-account">
+        	{account}
+        </div>
+        <div class="x-cart">
+	        <a href="/bag/show">
+	        	{?checkoutButtonNum}
+            	<span class="x-checkout-num">
+    				{checkoutButtonNum}
+    			</span>
+    			{/checkoutButtonNum}
+	        </a>
+        </div>
+	</div>
+	
+	{/isCart}
+	
+	{/isLoggedIn}
+    
+    <nav id="x-bottom-nav">
+    	<ul>
+    		{#footerLinks}
+    		<li>
+    			{.}
+    		</li>
+    		{/footerLinks}
+    		{?isLoggedIn}
+    		<li>{signOut}</li>
+    		{/isLoggedIn}
+    	</ul>
+    </nav>
+    {/isCart}
+    
+	<div class="x-row">
+		<!-- <div id="x-full-site"><a onclick="return Mobify.desktop();">View full site</a></div> -->
+	    <div id="x-copyright">{?isLoggedIn}{copyright}{:else}{content.copyright}{/isLoggedIn}</div>
+    </div>
+    
+    {shoppingbag}
+    {%script}
+    (function($) {
+    	// Scroll to top.
+        $('#x-backtotop-link').bind('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            $('body').animate({scrollTop: 1}, 200);
+            return false;
+        });
+    })(Mobify.$);
+    {/script}
+    
+{/footer}

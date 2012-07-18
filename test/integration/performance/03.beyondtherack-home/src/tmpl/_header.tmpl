@@ -1,0 +1,86 @@
+{#header}
+	<ul id="x-header-bar">
+		<li class="x-logo">
+            <a href="/">
+				<img src="{config.configDir}i/logo{HD}.png" alt="Beyond the Rack" />
+            </a>
+        </li>
+        
+        {?isLoggedIn}
+        
+	        {?isCart}
+	        	{?content.checkout}
+	        		
+	        		<li class="x-icon x-modify">
+			        	<a href="/bag/show">Modify cart</a>
+			        </li>
+	        	
+	        	{:else}
+	        
+			        <li class="x-icon x-checkout">
+			        	<a href="/bag/checkout">Checkout now</a>
+			        </li>
+			        
+				{/content.checkout}
+		        
+	        {:else}
+	        
+               	<li class="x-icon x-nav">
+                    <a href="#">Nav</a>
+                </li>
+		        
+				<li class="x-icon x-account {?isAccountPage}x-active{/isAccountPage}">
+		            {account}
+		        </li>
+				<li class="x-icon x-cart">
+		            <a href="/bag/show">
+		            	{?checkoutButtonNum}
+		            	<span class="x-checkout-num">
+	        				{checkoutButtonNum}
+	        			</span>
+	        			{/checkoutButtonNum}
+	        		</a>
+		        </li>
+	        
+	        {/isCart}
+	        
+        {:else}
+	        
+        	{?content.login}
+        	
+        	<li class="x-icon x-signup">
+        		<a href="/auth/register?r=">Sign up here</a>
+        	</li>
+        	
+        	{/content.login}
+        	
+        	{?content.register}
+        	
+        	<li class="x-icon x-signup">
+        		<a href="/auth/login?r=">Sign in here</a>
+        	</li>
+        	
+        	{/content.register}
+        
+        {/isLoggedIn}
+	</ul>
+	{?isLoggedIn}
+	<nav id="x-top-nav" class="x-category-nav">
+		{>_categorynav/}
+	</nav>
+    {/isLoggedIn}
+
+    {%script}
+        (function($) {
+            // Toggle menu
+            
+            $('li.x-nav a').click(function() {
+            	$('body').toggleClass('x-nav-active').addClass('x-animate');
+            	$('li.x-nav').toggleClass('x-active');
+                //$('#x-top-nav').slideToggle();
+                $('#x-top-nav').toggleClass('x-active');
+                return false;
+            });
+        })(Mobify.$);
+    {/script}
+{/header}

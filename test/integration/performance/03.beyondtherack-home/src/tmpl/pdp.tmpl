@@ -1,0 +1,272 @@
+{>base_smartphone/}
+
+{<body}
+    {#content}
+    
+    	<div id="x-context-nav">
+    	
+    		<div id="x-event-details">
+    			<a href="{eventLink}">
+    				<div class="x-title">
+	    				{eventTitle}
+    				</div>
+    				<div class="x-timer">
+    					{?eventTimer}
+	    				<span class="x-ends">
+	    					Ends in
+	    				</span>
+	    				{eventTimer}
+	    				{:else}
+	    				<span class="x-ends">
+	    					Event has Ended
+	    				</span>
+	    				{/eventTimer}
+    				</div>
+    			</a>
+    		</div>
+    		
+    		<ul id="x-product-nav">
+    			{#productNav}
+    			<li>
+    				{.}
+    			</li>
+    			{/productNav}
+    		</ul>
+    		
+    	</div>
+    	
+    	<div id="x-product">
+		
+		    <div class="x-slideshow-outer">
+				<div class="x-slideshow-items">
+			    	{sliderImages}
+			    </div>
+			    <span class="x-zoom-image"></span>
+		    </div>
+		    
+	    	{productDetails}
+    	
+    	</div>
+    	
+		<div id="x-accordion">
+    		
+    		<div class="x-accordionitem x-additionalinfo x-active">
+    		
+    			<h2><span>Additional Information</span></h2>
+    			
+    			<div class="x-content">
+    				
+    				{#additionalInfo}
+    				
+    					{description}
+    					
+    					{details}
+    					
+    					{notes}
+    					
+    					{guarantee}
+    					    				
+    				{/additionalInfo}
+    				
+    			</div>
+    		
+    		</div>
+    		
+    		<div class="x-accordionitem x-share">
+    		
+    			<h2><span>Share your passion for fashion</span></h2>
+    			
+    			<div class="x-content">
+    				
+    				{shareLinks}
+    				
+    			</div>
+    		
+    		</div>
+    		
+    		<div class="x-accordionitem x-help">
+    		
+    			<h2><span>We're here to help</span></h2>
+    			
+    			<div class="x-content">
+    				
+    				{helpLinks}
+    				
+    			</div>
+    		
+    		</div>
+    		
+    		<div class="x-accordionitem x-related">
+    		
+    			<h2><span>You'll also love</span></h2>
+    			
+    			<div class="x-content">
+    				
+    				{relatedItems}
+    				
+    			</div>
+    		
+    		</div>
+    		
+    	</div>
+
+    {/content}
+    {script}
+
+    {%script}
+        (function($) {
+        	// Image Slider 
+        	var $slider = $('.x-slideshow-items').slide();
+
+            // center the slider
+            $(document).ready(function() {
+                setTimeout(function() {
+                    if ($('#x-product .x-slideshow-items a').length > 2) {
+                        $slider.trigger('slidemove', -1);
+                    }
+                }, 300);
+            });
+            
+
+            // close the lightbox when tapped
+            $('#lightbox-overlay, #lightbox').live('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // get the slider index of the modal slider
+                var modal_slider_attr = document.querySelector('#lightbox .x-slideshow-items').style.webkitTransform.match(/[^()\s]+(?=,|\))/g);
+                var modal_slider_index = Math.abs(parseInt(modal_slider_attr[0], 10) / 240);
+
+                // get the slider index of the main slider
+                var main_slider_attr = document.querySelector('#x-product .x-slideshow-items').style.webkitTransform.match(/[^()\s]+(?=,|\))/g);
+                var main_slider_index = Math.abs(parseInt(main_slider_attr[0], 10) / 142);
+
+                var index_diff = Math.round(Math.abs(main_slider_index - modal_slider_index));
+                var direction = (main_slider_index - modal_slider_index > 0) ? 1 : -1;
+
+                // move the main slider to the same index as the modal slider
+                for (var i = 0; i < index_diff; i++) {
+                    $slider.trigger('slidemove', direction);
+                }
+
+                $('#lightbox-overlay, #lightbox').remove();
+                
+                // Affix body class for Android devices
+                if ($('html.x-android').length > 0) {
+                	$('body').removeClass('x-modal-open');
+                }
+                
+                return false;
+                
+            });
+
+            function fixOverlay() {
+                if ($('html.x-android').length == 0) {
+                    // make the overlay the height of the document
+                    $('#lightbox-overlay').css('height', $(document).height());
+                }
+            }
+
+            // when the initial slider is tapped, open the slider in a modal
+            $('#x-product .x-slideshow-items a').bind('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.scrollTo(0,1);
+
+                if ($('#lightbox').length > 0) {
+                    // #lightbox exists, so just show the lightbox
+                    $('#lightbox-overlay, #lightbox').show();
+
+                    fixOverlay();
+                }
+                else {
+                    // #lightbox doesn't exist, so create and show
+                    var $lightbox = $('<div id="lightbox-overlay"></div><div id="lightbox"><div id="lightbox-wrapper" class="wrapper"></div><a id="lightbox-close"></a></div>');
+
+                    $lightbox.find('#lightbox-wrapper').append($('.x-slideshow-outer').clone());
+                    $('#x-product').before($lightbox);
+
+                    fixOverlay();
+
+                    // initialize modal slider
+                    var $modal_slider = $('#lightbox .x-slideshow-items').removeAttr('data-slide').slide();
+
+                    // get the slider index of the main slider
+                    var slider_attr = document.querySelector('#x-product .x-slideshow-items').style.webkitTransform.match(/[^()\s]+(?=,|\))/g);
+                    var slider_index = Math.abs(parseInt(slider_attr[0], 10) / 142);
+
+                    // move the modal slider to the same index as the main slider
+                    for (var i = 0; i < slider_index; i++) {
+                        $modal_slider.trigger('slidemove', -1);
+                    }
+
+                    $('#lightbox .x-slideshow-items a').bind('click', function(e) {
+                        e.preventDefault();
+                        // don't let clicking image redirect to the image
+                    });
+                }
+                
+                // Affix body class for Android devices
+                if ($('html.x-android').length > 0) {
+                	$('body').addClass('x-modal-open');
+                }
+            });
+            
+            // Quantity Selector
+            
+            $('.x-qtySelect').change(function() {
+                
+                 $('.quantity-dial input[type=text]').val($('.x-qtySelect option:selected').val());
+            
+            });
+            
+            // Accordion
+                        
+             // Account for already open items
+			 $('.x-accordionitem.x-active .x-content').each(function() {
+			 	var $this = $(this);
+			 	height = $this.prop('scrollHeight');	
+			 	$this.height(height);		 	
+			 });
+            
+            $('.x-accordionitem h2').click(function() {
+            
+                var $this = $(this);
+            
+                $this.parent().toggleClass('x-active');
+                
+                var height = $this.next().prop('scrollHeight');
+                
+                // We can't CSS transition an unknown height, so get height
+                if ($this.parent().hasClass('x-active')) {
+                    $this.next().height(height);
+                } else {
+                    $this.next().height(0);
+                }
+          
+            });
+			
+        })(Mobify.$);
+
+        $(document).ready(function() {
+            // Add to Bag
+            
+            var floatBagCount = floatBag.getTotalCount(); // save the current bag number
+            var _floatBagAdd = floatBag.add; // save the add functionality
+
+            floatBag.add = function() {
+                floatBagCount = floatBag.getTotalCount(); // get current bag number
+                _floatBagAdd.apply(this, arguments); // perform the normal add functionality
+            };
+
+            var _updateCheckoutButton = updateCheckoutButton;
+            updateCheckoutButton = function() {
+                if (floatBag.getTotalCount() > floatBagCount) {
+                    window.location = '/bag/show'; // if the new bag count is higher than before, the add was successful, so forward to the bag page
+                }
+                _updateCheckoutButton.apply(this, arguments);
+            };
+        });
+        
+    {/script}
+{/body}

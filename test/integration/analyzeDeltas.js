@@ -24,20 +24,20 @@
 	    'infinity': 1.96
 	};		
 
-	window.analyzeDeltas = function(timingPoints) {
+	module.exports = function(timingPoints) {
 		var deltas = [];
 		timingPoints.forEach(function(run) {
 			run.forEach(function(entry, i) {
-				var lastEntry = i ? run[i-1] : entry;
-				var delta = entry[0] - lastEntry[0];
+				var lastEntry = run[(run.length + i-1) % run.length];
+				var delta = Math.abs(entry[0] - lastEntry[0]);
 
 				deltas[i] = deltas[i] || [];
-				deltas[i].name = entry[1];
+				deltas[i].name = i ? entry[1] : 'Total';
 				deltas[i].push(delta / 1e3);
 			})
 		});
 
-		deltas.forEach(function(delta) {
+		return deltas.map(function(delta) {
 			delta.mean = getMean(delta);
 	        // sample variance (estimate of the population variance)
 	        delta.variance = delta.reduce(
@@ -57,8 +57,8 @@
 	        // relative margin of error
 	        delta.rme = (delta.moe / delta.mean) * 100 || 0;
 
-	        log('    ' + delta.name + ', avg ' + (delta.mean * 1e3).toFixed(2) + 'ms \xb1'
-		        + delta.rme.toFixed(2) + '%');
-		});
+	        return '    ' + delta.name + ', avg ' + (delta.mean * 1e3).toFixed(2) + 'ms +/-'
+		        + delta.rme.toFixed(2) + '%';
+		}).join('\n');
 	};
 })();

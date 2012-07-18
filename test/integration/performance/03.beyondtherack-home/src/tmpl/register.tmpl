@@ -1,0 +1,29 @@
+{>base_smartphone/}
+
+{<body}
+    {#content}
+        {image}
+        {?errors}
+			{errors}    		
+		{:else}
+		{?keywordHeader}
+		<h1 id="x-hero-text">
+			{keywordHeader}
+		</h1>
+		{/keywordHeader}
+		{?textHeader}
+		<p class="x-help-text">
+			{textHeader}
+		</p>
+		{/textHeader}
+		{?bullets}
+        <ul id="x-bullets">
+            {bullets}
+        </ul>
+        {/bullets}
+        {/errors}
+        {register}
+        {script}
+        {fbRoot}
+    {/content}
+{/body}

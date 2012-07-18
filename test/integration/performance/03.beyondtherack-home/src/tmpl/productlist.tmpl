@@ -1,0 +1,145 @@
+{>base_smartphone/}
+
+{<body}
+    {%script}
+		(function($) {
+	    	$('body').addClass('x-grid');
+	    })(Mobify.$);
+	{/script}
+    {#content}
+    	<div id="x-context-nav">
+    	
+    		<div id="x-event-details">
+    			<a href="{backHref}">
+    				<div class="x-title">
+	    				{eventTitle}
+    				</div>
+    				<div class="x-timer">
+	    				<span class="x-ends">
+	    				Ends in
+	    				</span>
+	    				{eventTimer}
+    				</div>
+    			</a>
+    		</div>
+    		
+    		<ul id="x-view-switcher">
+    			<li class="x-icon x-grid">
+    				<a href="#">Grid</a>
+    			</li>
+    			<li class="x-icon x-list">
+    				<a href="#">List</a>
+    			</li>
+    		</ul>
+    		
+    	</div>
+    	<div id="x-filters">
+            {filterForm}
+    	</div>
+    	
+    	{?pagination}
+        <div class="x-pagination">
+    		{pagination}
+    	</div>
+    	{/pagination}
+    
+        <div id="x-product-list">
+        	{productlist}
+        </div>
+        
+        {?pagination}
+        <div class="x-pagination">
+    		{pagination}
+    	</div>
+    	{/pagination}
+
+    {/content}
+    {script}
+    {%script}
+        //$("img.x-lazy").lazyload({ threshold : 800 });
+        (function($) {
+
+            $(document).ready(function() {
+                setTimeout(function() {
+                    $('img.x-lazy').each(function() {
+                        var $img = $(this);
+
+                        $img.attr('src', $img.attr('data-original'));
+                    });
+                }, 1000);
+            });
+
+            /* Filters */
+
+            $('#x-filters select').live('change', function(e) {
+                $('#x-filter-form').submit();
+            });
+            
+            /* Toggle View */
+            
+            $('li.x-grid a').parent().addClass('x-active');
+            
+            $('li.x-grid a').click(function() {
+            	$('body').removeClass('x-grid');
+            	$('body').removeClass('x-list');
+            	$('li.x-list a').parent().removeClass('x-active');
+            	$('li.x-grid a').parent().removeClass('x-active');
+            	$('body').addClass('x-grid');
+            	$('li.x-grid a').parent().addClass('x-active');
+            	return false;
+            });
+            
+            $('li.x-list a').click(function() {
+            	$('body').removeClass('x-grid');
+            	$('body').removeClass('x-list');
+            	$('li.x-list a').parent().removeClass('x-active');
+            	$('li.x-grid a').parent().removeClass('x-active');
+            	$('body').addClass('x-list');
+            	$('li.x-list a').parent().addClass('x-active');
+            	return false;
+            });
+         
+            /* Ellipsis product titles that are too long */
+            
+            $(document).ready(function() {
+                $('.x-title').each(function() {
+                    var $this = $(this),
+                        divh = $this.height() - 10,
+                        p = $this.find('span').get(0),
+                        prevHeight = 0;
+
+                    if(p) {
+                        /* Sanity check, make sure we are doing something each loop */
+                        while (p.scrollHeight > divh && divh > 0) {
+                            var text = p.textContent,
+                                prevHeight = p.scrollHeight;
+
+                            p.innerHTML = text.replace(/\W*\s(\S)*$/, '&hellip;');
+                        }
+                    }
+                });
+            });
+            
+        })(Mobify.$);
+
+        $(document).ready(function() {
+            /* Add to Bag */
+            
+            var floatBagCount = floatBag.getTotalCount();
+            var _floatBagAdd = floatBag.add;
+
+            floatBag.add = function() {
+                floatBagCount = floatBag.getTotalCount();
+                _floatBagAdd.apply(this, arguments);
+            };
+
+            var _updateCheckoutButton = updateCheckoutButton;
+            updateCheckoutButton = function() {
+                if (floatBag.getTotalCount() > floatBagCount) {
+                    window.location = '/bag/show';
+                }
+                _updateCheckoutButton.apply(this, arguments);
+            };
+        });
+    {/script}
+{/body}

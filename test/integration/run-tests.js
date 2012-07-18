@@ -7,7 +7,6 @@ window.log = function(value) {
 
 var tests = location.search.match(/(^\?|&)tests=([^&]*)/,'')[2].split('+')
   , mode = location.search.match(/(^\?|&)mode=([^&]*)/,'')[2]
-  , remainingTests = tests.slice()
   , iframe = document.createElement('iframe')
   , results = []
   , advance;
@@ -34,40 +33,11 @@ iframe.addEventListener("load", function() {
 }, false);
 
 if (mode == 'performance') {
-	var runTest = function() {
-		if (!remainingTests.length) {
-			var request = new XMLHttpRequest();
-			request.open('POST', '/submit', true);  
-			request.send(results.join('\n'));
-			return;
-		}
-
-		var testName = remainingTests.shift()
-		  , timingPoints = []
-		  , deferred
-		  , suite = new Benchmark.Suite();
-
-		advance = function() {
-			var MobifyObj = iframe.contentWindow.Mobify;
-			MobifyObj && MobifyObj.timing && timingPoints.push(MobifyObj.timing.points);
-			
-			deferred
-				? (deferred.resolve(), deferred = undefined)
-				: suite.run({async: true});
-		};
-		iframe.src = '/start/' + testName;
-
-		suite.add(testName, { initCount: 1, minSamples: 250, defer: true, fn: function(defer) {
-			deferred = defer;
-			iframe.src = '/tag/' + mode + '/' + testName + '.html?' + +new Date;
-		}}).on('cycle', function(event) {
-			log(String(event.target));
-		}).on('complete', function() {
-			window.analyzeDeltas(timingPoints);			
-			runTest();
-		})
+	var firstTest = tests.shift();
+	advance = function() {
+		window.location.href = '/tag/' + mode + '/' + firstTest + '.html?iter=0&perf=&tests=' + tests.join('+');
 	};
-	runTest();
+	iframe.src = '/start/' + firstTest;
 } else {
 	document.getElementById("qunit").style.display = "block";
 	tests.forEach(function(testName) {

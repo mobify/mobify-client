@@ -1,0 +1,95 @@
+{>base_smartphone/}
+
+{<body}
+    {#content}
+    	{marketingBanners}
+        <div id="x-currentevents">
+            {#currentEvents}
+            	<div class="x-event">
+	                <a href="{href}">
+	                    <img src="{src}" class="{class}" data-original="{original}" />
+                    	{text}
+	                </a>
+               	</div>
+            {/currentEvents}
+        </div>
+        
+        {?endingEvents}
+        <div id="x-endingevents">
+	        <h3>
+                Events Ending Soon
+            </h3>
+
+            {#endingEvents}
+                <div class="x-event">
+                	<div>
+                		{?href}
+                    	<a href="{href}">
+                    	{/href}
+	                		{text}
+		                    <span class="time">{time}</span>
+	                    {?href}
+	                    </a>
+	                    {/href}
+                    </div>
+                </div>
+            {/endingEvents}
+            
+			{?showMoreEnding}
+            <a class="toggle button">See all events ending soon</a>
+            {/showMoreEnding}
+	    </div>
+	    {/endingEvents}
+
+		{?upcomingEvents}
+        <div id="x-upcomingevents">
+	        <h3>
+                Upcoming Events
+            </h3>
+
+            {#upcomingEvents}
+                <div class="x-event">
+                    <div>
+                    	{?href}
+                    	<a href="{href}">
+                    	{/href}
+	                    	{text}
+		                    <span class="time">{time}</span>
+		                {?href}
+	                    </a>
+	                    {/href}
+                    </div>
+                </div>
+            {/upcomingEvents}
+			
+			{?showMoreUpcoming}
+            <a class="toggle button">See all upcoming events</a>
+            {/showMoreUpcoming}
+	    </div>
+	    {/upcomingEvents}
+        {jQuery}
+    {/content}
+    {%script}
+
+        (function($) {
+        	// Drop Events Menu by default on Events pages
+        	$('body').addClass('x-nav-active');
+        	$('#x-header-bar .x-nav, #x-top-nav').addClass('x-active');
+
+            $(document).ready(function() {
+                setTimeout(function() {
+                    $('img.x-lazy').each(function() {
+                        var $img = $(this);
+
+                        $img.attr('src', $img.attr('data-original'));
+                    });
+                }, 1000);
+            });
+
+            // Toggle Events.
+            $('a.toggle').click(function() {
+                $(this).parent().toggleClass('x-expanded');
+            });
+        })(Mobify.$);
+    {/script}
+{/body}

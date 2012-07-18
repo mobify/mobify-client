@@ -1,0 +1,90 @@
+{>base_smartphone/}
+
+{<body}
+
+    {#content}
+    	
+    	{?checkout}
+    		{%script}
+		    	Mobify.$('body').last().addClass('x-checkout');
+		    {/script}
+    	{:else}
+    	<div id="x-context-nav">
+    		<a href="#" onclick="history.back();return false" class="x-back">Back</a>
+    	
+	    	{subtotal}
+	    	
+    	</div>    	
+    	
+    	{noItems}
+    	
+    	<form action="{formAction}" method="post" id="x-cart-form">
+	    	
+	    	{#items}
+	    	
+	    	<div class="x-item">
+			
+			    {img}
+			    
+			    <div class="x-desc">
+			    
+				    {name}
+				    
+				    {qtyLeft}
+				    
+				    {?color}
+				    <div class="x-color">
+					    <span>{colorLabel}</span>
+					    {color}
+				    </div>
+				    {/color}
+				    
+				    {?size}
+				    <div class="x-size">
+				    	<span>{sizeLabel}</span>
+					    {size}
+				    </div>
+				    {/size}
+				    
+				    {?qty}
+				    <div class="x-qty">
+				    	<label>{qtyLabel}</label>
+				    	{qty}
+				    </div>
+				    {/qty}
+				    
+				    {?price}
+				    <div class="x-price">
+				    	<span>{priceLabel}</span>
+				    	{price}
+				    </div>
+				    {/price}
+				    
+				    {expires}
+				    
+				    {error}
+				    
+				    {remove}
+			    
+			    </div>
+			        	
+	    	</div>
+	    	
+	    	<hr>
+	    	
+	    	{/items}
+	    	
+	    	{subtotal}
+	    	
+	    	{totalSaved}
+	    	
+			{checkoutButton}
+		    	
+    	</form>
+    	{/checkout}
+
+    	{checkout}
+    	
+    {/content}
+    {script}
+{/body}

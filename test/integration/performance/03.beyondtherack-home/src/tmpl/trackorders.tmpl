@@ -1,0 +1,47 @@
+{>base_smartphone/}
+
+{<body}
+    {#content}
+    
+    	<div id="x-context-nav" class="x-category-nav">
+    	
+    		{accountMenu}
+    	
+    	</div>
+ 
+    	{orderList}
+        
+    {/content}
+    {script}
+    {%script}
+    	(function($){
+    		// Account for already open items
+			 $('.order-box.x-active .status-group').each(function() {
+			 	var $this = $(this);
+			 	height = $this.prop('scrollHeight');	
+			 	$this.height(height);		 	
+			 });
+    	
+    		$('.order-header').bind('click', function() {
+    			var $this = $(this),
+    				$parent = $this.parent('.order-box');
+    				$orderstatus = $parent.find('.status-group');
+    			
+    			$parent.toggleClass('x-active');
+    			
+    			var height = $orderstatus.prop('scrollHeight');
+    			
+    			// We can't CSS transition an unknown height, so get height
+                if ($parent.hasClass('x-active')) {
+                    $orderstatus.height(height);
+                    console.log('added height');
+                } else {
+                	$orderstatus.height(0);
+                	console.log('removed height');
+                }
+    			
+			});
+    		
+    	})(Mobify.$);
+    {/script}
+{/body}

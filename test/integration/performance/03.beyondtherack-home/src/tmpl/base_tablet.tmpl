@@ -1,0 +1,47 @@
+{>base/}
+
+{<header}{/header}
+
+{<footer}{/footer}
+
+{+scripts}
+	{?content.orderConfirmed}
+	    {>_record_sale_js/}
+	{/content.orderConfirmed}
+
+    {%script}
+    	(function($) {
+    		if ($('#bgdiv').length > 0) {
+    			$('#body').addClass('x-home');
+    		}
+
+    		if(/(iPhone|iPod|iPad)/i.test(navigator.userAgent)) {
+	            if (/OS [5]_.* like Mac OS X/i.test(navigator.userAgent)) {
+	                Mobify.$('html').addClass('x-ios5');
+	            }
+	        }
+    	})(Mobify.$);
+
+    	$(document).ready(function() {
+    		if (!$('html').hasClass('x-ios5')) {
+    			// Add to Bag            
+	            var floatBagCount = floatBag.getTotalCount(); // save the current bag number
+	            var _floatBagAdd = floatBag.add; // save the add functionality
+
+	            floatBag.add = function() {
+	                floatBagCount = floatBag.getTotalCount(); // get current bag number
+	                _floatBagAdd.apply(this, arguments); // perform the normal add functionality
+	            };
+
+	            var _updateCheckoutButton = updateCheckoutButton;
+	            updateCheckoutButton = function() {
+	                if (floatBag.getTotalCount() > floatBagCount) {
+	                    window.scrollTo(0, document.body.scrollHeight); // if the new bag count is higher than before, the add was successful, scroll to the bottom
+	                }
+	                _updateCheckoutButton.apply(this, arguments);
+	            };
+    		}
+            
+        });
+    {/script}
+{/scripts}

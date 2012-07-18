@@ -1,0 +1,9 @@
+{
+    "name": "test/03.beyondtherack-home",
+    "api": "1.1",
+    "build_directory": "bld",
+    "plugins": [],
+    "exclude": [
+        "*.tmpl"
+    ]
+}

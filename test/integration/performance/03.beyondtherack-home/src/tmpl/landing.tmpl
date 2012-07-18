@@ -1,0 +1,38 @@
+{>base_smartphone/}
+
+{<body}
+    {#content}
+        {image}
+        {?errors}
+			{errors}    		
+		{:else}
+        <h1 id="x-hero-text">
+            {text}
+        </h1>
+        {/errors}
+        {login}
+        {fbRoot}
+        {popup}
+    {/content}
+    {script}
+    {%script}
+    (function($) {
+        $(document).ready(function() {
+            $('#popup-container').before($('<div id="popup-overlay">'));
+
+            $('.popup-link').bind('click', function() {
+                // scroll to top
+                $('body').animate({scrollTop: 1});
+
+                // activate lightbox overlay
+                $('#popup-overlay').addClass('active');
+            });
+
+            $('#popup-close').bind('click', function() {
+                // hide the lightbox overlay
+                $('#popup-overlay').removeClass('active');
+            });
+        });
+    })(Mobify.$);
+    {/script}
+{/body}

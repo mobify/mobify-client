@@ -17,8 +17,10 @@ Injector = require '../../src/injector.coffee'
 {Project} = require '../../src/project.coffee'
 Preview = require '../../src/preview.coffee'
 Scaffold = require '../../src/scaffold.coffee'
+analyzeDeltas = require './analyzeDeltas.js'
 
 PORT = { STATIC: 1341, TAG: 1342, PREVIEW: 8080 }
+PERF_ITERATIONS = 50
 requestLog = [];
 logRequests = () ->
     result = requestLog.join('\n')
@@ -39,15 +41,35 @@ program
 
 start = (mode) ->
     integrationDir = "#{__dirname}/../integration"
-    tests = fs.readdirSync(integrationDir + '/' + mode).filter((x) -> x.match(/^\d+\.[^.]+$/))
+    tests = fs.readdirSync(integrationDir + '/' + mode)
+        .filter((x) -> x.match(/^\d+\.[^.]+$/))
 
     # Static Server
     @static = new Connect()
         .use(Connect.query())
+        .use(Connect.cookieParser())
+        .use(Connect.session({ secret: "keyboard cat" }))      
         .use('/', (req, res, next) ->
-            return next() if req.query.tests or req.url != '/'
-            res.writeHead(302, {Location: req.url + '?mode=' + mode + '&tests=' + tests.join('+')})
-            res.end()
+            if !req.query.tests and req.url == '/'
+                res.writeHead(302, {Location: req.url + "?mode=#{mode}&tests=" + tests.join('+')})
+                res.end()
+                return
+
+            if +req.query.iter >= PERF_ITERATIONS
+                if (req.query.tests and req.query.tests.length)
+                    remainingTests = req.query.tests;
+                    res.writeHead(302, {Location: "/?mode=#{mode}&tests=#{remainingTests}"})
+                else
+                    res.writeHead(302, {Location: "/done"})
+                res.end()
+                return
+
+
+            if (req.query.perf)
+                url = req.url.split('?')[0].split('/').pop().replace(/\.html$/, '')
+                console.log('RECORDING', url)
+                req.session[url] = (req.session[url] || '') + req.query.perf + '\n'
+            next()
         )
         .use(Connect.static integrationDir)
         .use(Connect.middleware.logger((request, result) ->
@@ -65,17 +87,14 @@ start = (mode) ->
             )
         )
         .use('/end', (req, res) ->
-            res.end logRequests()
+            res.end(logRequests())
         )
-        .use('/submit', (req, res) ->
-            body = ''
-            req.on('data', (data) -> 
-                body += data;
-            )
-            req.on('end', () ->
-                console.log(body)
-                res.end
-            )
+        .use('/done', (req, res) ->
+            for key in tests
+                results = JSON.parse('[' + req.session[key].split('\n').join(',') + '0]')
+                results.pop()
+                res.write(key + '\n' + analyzeDeltas(results) + '\n')
+            res.end()
         )
         .use('/start', (req, res) ->
             logRequests()
@@ -86,7 +105,7 @@ start = (mode) ->
 
             project = Project.load "test/integration/#{mode}#{target}/project.json"
             project.build_directory = "test/integration/#{mode}#{target}/bld"
-            project.build({ test: true,  }, (err) ->
+            project.build({ test: true, production:false  }, (err) ->
                 if err
                     error = "Failed to build #{target}. Error: #{err}"
                     console.log(error)

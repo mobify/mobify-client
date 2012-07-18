@@ -1,0 +1,23 @@
+{%script}
+    /* GA order tracking */
+    (function($) {
+        var text = $('pre').text()
+          , orderId = /order no. ([0-9]+)/.exec(text)[1]
+          , taxRe = /[GQ]ST.*?\$\s*([0-9]+\.[0-9]+)/g
+          , matchTotal = /Total.*\$\s*([0-9]+\.[0-9]+)/.exec(text)
+          , tax = 0
+          , total = 0
+          , match;
+
+        while (match = taxRe.exec(text)) {
+            tax += +match[1] || 0;
+        }
+
+        if (matchTotal) total = matchTotal[1];
+
+        Mobify.analytics = Mobify.analytics || {};
+        Mobify.analytics.ga = Mobify.analytics.ga || [];
+        Mobify.analytics.ga.push(['_addTrans', orderId, 'BTR', total, tax], ['_trackTrans']);
+
+    })(Mobify.$);
+{/script}
