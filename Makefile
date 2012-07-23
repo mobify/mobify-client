@@ -34,6 +34,6 @@ jenkins:
         --compilers coffee:coffee-script \
         --ignore-leaks  \
         --timeout 10000  \
-        $(TESTS) | grep '<*>' | tee report.xml
+        $(TESTS) | egrep '^</?test' | tee report.xml
 
 .PHONY: test
