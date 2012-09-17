@@ -15,9 +15,12 @@ errorTemplate = require '../lib/errorTemplate.js'
 
 
 MimeTypes =
-    'css': 'text/css'
-    'html': 'text/html'
-    'js': 'application/javascript'
+    'css': 'text/css; charset=utf8'
+    'html': 'text/html; charset=utf8'
+    'xml': 'application/xml; charset=utf8'
+    'xhtml': 'application/xhtml+xml; charset=utf8'
+    'js': 'application/javascript; charset=utf8'
+    'json': 'application/json; charset=utf8'
     'jpeg': 'image/jpeg'
     'jpg': 'image/jpeg'
     'png': 'image/png'
