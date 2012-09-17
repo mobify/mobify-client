@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Shift-JIS Test</title>
+<meta http-equiv="Content-Type" content="text/html; charset=shift_jis" />
+<!--
+  Usage:
+
+  1. Run `mobify preview` in this folder.
+  2. Open this page.
+  3. Ensure the characters look correct.
+-->
+<script>
+(function(window, document, mjs) {
+
+window.Mobify = {points: [+new Date], tagVersion: [1, 0]};
+
+document.write('<plaintext style="display:none">');
+
+setTimeout(function() {
+    var mobifyjs = document.createElement('script')
+      , script = document.getElementsByTagName('script')[0];
+
+    mobifyjs.src = mjs;
+    script.parentNode.insertBefore(mobifyjs, script);
+});
+
+})(this, document, 'http://127.0.0.1:8080/mobify.js');
+</script>
+</head>
+<body>
+<p>This file is encoded using SHIFT-JIS.</p>
+<p>All the lines below should look the same.</p>
+<h1>TEST: どーも</h1>
+<h1>REPLACE</h1>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{>"/base/lib/base_konf.konf"/}
+
+{<tmpl}{/tmpl}
+
+{<konf} {
+
+'OUTPUTHTML': function(context) {
+    var outerHtml = context.data("$html")[0].outerHTML
+    outerHtml = outerHtml.replace(/REPLACE/, "UTF8: どーも");
+    return outerHtml;
+}
+
+} {/konf}
