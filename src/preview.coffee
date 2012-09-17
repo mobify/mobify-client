@@ -2,7 +2,7 @@ Events = require 'events'
 FS = require 'fs'
 Http = require 'http'
 Path = require 'path'
-URL = require 'url'
+Url = require 'url'
 Request = require 'request'
 
 Express = require 'express'
@@ -42,7 +42,7 @@ class PreviewHandler
 
     get: (request, response) =>
         request.on "end", =>
-            url = URL.parse request.url
+            url = Url.parse request.url
             path = url.pathname.slice 1
 
             ext = Utils.getExt path
@@ -73,7 +73,7 @@ class PreviewHandler
             buf += chunk
 
         request.on "end", =>
-            url = URL.parse request.url
+            url = Url.parse request.url
             path = url.pathname.slice 1
             headers = {"Content-Type": "text/plain"}
 
