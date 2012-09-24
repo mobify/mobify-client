@@ -1,5 +1,3 @@
-machine:
-
 checkout:
     post:
         - git submodule update --init --recursive
