@@ -1,0 +1,14 @@
+machine:
+
+checkout:
+    post:
+        - git submodule update --init --recursive
+
+dependencies:
+    override:
+        - npm install --dev
+
+
+test:
+    override:
+        - make jenkins
