@@ -1,5 +1,16 @@
 var requirejs = require('requirejs'),
-    fs = require('fs');
+    fs = require('fs'),
+    compressJs = require('./utils').compressJs,
+    minifyFn = function(text) {
+        try {
+            text = compressJs(text.replace(/^\s*<!(?:\[CDATA\[|\-\-)/, "/*$0*/"));
+            result = ['', text];
+        } catch(e) {
+            console.log(e);
+            result = ['Minification failed: ' + e, text];
+        }
+        return result;
+    };
 
 module.exports = function compose(confPath, composedCallback, opts) {
     var confDir = confPath.split('/')
@@ -16,26 +27,34 @@ module.exports = function compose(confPath, composedCallback, opts) {
         };
 
         var baseDir = opts.base + '/base';
-
+        
         var requireConfig = {
             baseUrl: confDir,
             name: "build/almond",
             include: [ confFile ],
-            insertRequire: [ confFile ],
+            insertRequire: [confFile ],
             out: "mobify-built.js",
+            config: {
+                rdust: {
+                    minify: opts.minify ? minifyFn : function(x) { return ['', x] }
+                },
+                dev: {
+                    development: !opts.production
+                }
+            },
             paths: {
                 "mobifyjs": baseDir + "/api",
                 "vendor" : baseDir + "/vendor",
                 "build" : baseDir + "/build",
                 "rdust" : baseDir + "/build/rdust",
+                "dev" : baseDir + "/build/dev",
                 "dust" : baseDir + "/vendor/dust-core"
             },
-            shim: {
-                "dust": {
-                    exports: "dust"
-                }
+            wrap: {
+                start: 'var requirejs, require, define;(function(){var concatenatedJS = arguments.callee;',
+                end: '})();'
             },
-            stubModules: ["rdust"]          
+            stubModules: ["rdust", "dev"]          
         };
 
         if (!opts.minify) requireConfig.optimize = "none";
