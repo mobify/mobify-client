@@ -38,6 +38,9 @@ module.exports = function compose(confPath, composedCallback, opts) {
                 rdust: {
                     minify: opts.minify ? minifyFn : function(x) { return ['', x] }
                 },
+                cond: {
+                    dev: !opts.production
+                },
                 dev: {
                     development: !opts.production
                 }
@@ -47,14 +50,11 @@ module.exports = function compose(confPath, composedCallback, opts) {
                 "vendor" : baseDir + "/vendor",
                 "build" : baseDir + "/build",
                 "rdust" : baseDir + "/build/rdust",
+                "cond" : baseDir + "/build/cond",
                 "dev" : baseDir + "/build/dev",
                 "dust" : baseDir + "/vendor/dust-core"
             },
-            wrap: {
-                start: 'var requirejs, require, define;(function(){var concatenatedJS = arguments.callee;',
-                end: '})();'
-            },
-            stubModules: ["rdust", "dev"]          
+            stubModules: ["rdust", "cond"]          
         };
 
         if (!opts.minify) requireConfig.optimize = "none";
