@@ -1,80 +1,94 @@
 # Mobify Client
----------------
 
-### Usage
----------
+The Mobify Client is a command line tool for building and deploying Mobify.js projects.
+
+## Usage
 
 * `mobify`: Print help text.
-* `mobify init <project_name>`: Create a new project from the scaffold. Project name should match the project name on Mobify.
-* `mobify preview`: Preview the current project.
+
+* `mobify init <project_name>`: Create a new project from the scaffold.
+
+* `mobify preview`: Runs a local server which dynamically builds the project.
 
         -h, --help                  output usage information
-        -p, --port <port>           port to bind to
-        -a, --address <address>     address to bind to
+        -p, --port <port>           port to bind to [8080]
+        -a, --address <address>     address to bind to [0.0.0.0]
         -m, --minify                enable minification
-        -t, --tag                   runs a tag injecting proxy (sudo)
-        -u, --tag-version <version> version of the tags to use (6)
+        -t, --tag                   runs a tag injecting proxy, requires sudo
+        -u, --tag-version <version> version of the tags to use with tag injection [6]
 
-* `mobify push`: Uploads the current project to Portal.
+* `mobify build`: Builds the project and places it into a bld folder.
+
+* `mobify push`: Builds and uploads the project to the Mobify Cloud.
 
         -h, --help                 output usage information
-        -m, --message <message>    Message for build information
-        -l, --label <label>        Label the build
-        -t, --test                 Do a test build, do not upload
-        -e, --endpoint <endpoint>  Set the API endpoint eg. https://portal.mobify.com/api/
-        -u, --auth <auth>          Username and API Key eg. username:apikey
-        -p, --project <project>    Override the project for a build
+        -m, --message <message>    message for build information
+        -l, --label <label>        label the build
+        -e, --endpoint <endpoint>  set the API endpoint
+        -u, --auth <auth>          username and API Key
+        -p, --project <project>    override the project name for push endpoint
+
+* `mobify login`: Saves Mobify Cloud credentials to global settings.
+
+        -h, --help                 output usage information
+        -u, --auth <auth>          username and API Key eg. username:apikey
 
 
+## Installation
 
+The Mobify Client requires Node >= 0.6.2. 
 
-### Installation
-----------------
+### Install from NPM
 
-The mobify client requires Node >= 0.6.2.
+Remove previously installed versions of the client:
 
-First remove any previously installed versions of the client:
+    $ sudo npm -g remove mobify-client
 
-    npm -g remove mobify-js-tools
+Install the client:
 
-Then install the client by running this command from Terminal. Use your email address and API key from Portal:
+    $ sudo npm -g install mobify-client
 
-    npm -g install https://<EMAIL>:<KEY>@portal.mobify.com/npm/mobify-js-tools/
-
-Test that the client is install by running the `mobify` command in Terminal:
+Test the client is installed:
 
     $ mobify -V
-    0.2.X
+    0.3.X
 
-### Running the Tests
----------------------
+### Install from Source
+
+To checkout the source from GitHub and install dependencies:
+
+    git clone https://github.com/mobify/mobify-client/
+    cd mobify-client
+    make install
+
+Test the client is installed:
+
+    $ bin/mobify.js -V
+    0.3.X
+
+The source installed version of the client is available via the `mobify.js` command. this makes it easier to run both source and NPM versions of the client simultaneously. Add `:path/mobify-client/bin` to `$PATH` to run the `mobify.js` command from anywhere.
+
+## Contributing
+
+Create a branch and submit a pull request to this repo!
+
+### Reporting a bug
+
+File an issue!
+
+### Running the tests
 
     make tests
 
+### Publish
+---------------------
 
-### Updating the base API Version
----------------------------------
+Make sure you modify the changelog.
 
-1) Go in to `vendor/mobify-js/latest/base`, and checkout the version you want.
-
-2) Commit your change to the submodule.
-
-3) To "bake" the latest verison in to a named versioned (eg, 1.0) go:
-
-    make bake VERSION=1.0
-
-4) This will copy files out of the mobify-js submodule and into the tools repo. You must then commit them.
-
-
-### Releasing a new version
----------------------------
-
-1) Update the API, as above if necessary.
-
-2) Update the CHANGELOG and project.json with new (higher) version number.
-
-3) Make a new tools tarball:
-
-    make
-
-4) Copy new tarball to portal/protected and update symlink.
+Note: you'll need to be an owner on NPM to publish.
+    
+    $ git status
+    (ensure clean working directory)
+    $ make archive
+    (creates archive mobify-client.v.x.x.x.tgz)
+    $ npm publish mobify-client.v.x.x.x.tgz

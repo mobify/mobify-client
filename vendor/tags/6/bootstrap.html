@@ -66,7 +66,7 @@ if (paths.shift()) {
 
 })(function() {
     if (/ip(hone|od|ad)|android|blackberry.*applewebkit/i.test(navigator.userAgent)){
-        return [true, 'http://localhost:8080/mobify.js']
+        return [true, '{{ mobifyjsPath }}']
     }
 });
 </script>

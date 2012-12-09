@@ -2,7 +2,7 @@ Events = require 'events'
 FS = require 'fs'
 Http = require 'http'
 Path = require 'path'
-URL = require 'url'
+Url = require 'url'
 Request = require 'request'
 
 Express = require 'express'
@@ -15,9 +15,12 @@ errorTemplate = require '../lib/errorTemplate.js'
 
 
 MimeTypes =
-    'css': 'text/css'
-    'html': 'text/html'
-    'js': 'application/javascript'
+    'css': 'text/css; charset=utf8'
+    'html': 'text/html; charset=utf8'
+    'xml': 'application/xml; charset=utf8'
+    'xhtml': 'application/xhtml+xml; charset=utf8'
+    'js': 'application/javascript; charset=utf8'
+    'json': 'application/json; charset=utf8'
     'jpeg': 'image/jpeg'
     'jpg': 'image/jpeg'
     'png': 'image/png'
@@ -39,7 +42,7 @@ class PreviewHandler
 
     get: (request, response) =>
         request.on "end", =>
-            url = URL.parse request.url
+            url = Url.parse request.url
             path = url.pathname.slice 1
 
             ext = Utils.getExt path
@@ -70,7 +73,7 @@ class PreviewHandler
             buf += chunk
 
         request.on "end", =>
-            url = URL.parse request.url
+            url = Url.parse request.url
             path = url.pathname.slice 1
             headers = {"Content-Type": "text/plain"}
 

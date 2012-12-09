@@ -1,3 +1,29 @@
+v0.3.10 - Adds proxy support for pushing
+
+v0.3.8  - Fixes Windows path issue introduced in v0.3.7
+
+v0.3.7  - Provides 'project_name' template variable when compiling mobify.js
+        - Updates Zepto
+        - Image resizer now reports 'project_name'
+        - Adds Debug flag. Will always give debugging output when using
+          `mobify preview`
+
+v0.3.6  - Adds `mobify build` command
+        - Removes bld folder after a push
+        - Adds tests for command line functions
+        - Fixes warnings on iOS caused by the viewport tag
+
+v0.3.5  - Performance improvements with 1.1
+        - Fixes bug with Combo and FF Mobile
+
+v0.3.4  - Adds Combo Service
+
+v0.3.3  -
+
+v0.3.2  - Fixes preview bug
+
+v0.3.0  - Published on NPM
+
 v0.2.25 - Adds Mobify.js 1.1 Alpha.
         - Better error reporting for mobify.js compilation.
 

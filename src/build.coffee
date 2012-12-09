@@ -12,6 +12,7 @@ FStream = require 'fstream'
 Tar = require 'tar'
 Async = require 'async'
 CleanCSS = require 'clean-css'
+Wrench = require 'wrench'
 
 Utils = require './utils.coffee'
 
@@ -75,13 +76,14 @@ class Environment extends Events.EventEmitter
         handlers.push handler
         @post_processors[ext] = handlers
 
-    constructor: (paths, base_path, production=false) ->
+    constructor: (paths, base_path, project_name, production=false) ->
         if paths instanceof Array
             @paths = paths
         else
             @paths = [paths]
         @base_path = base_path
         @production = production
+        @project_name = project_name
 
     ###
     Class Property Accessors
@@ -141,7 +143,7 @@ class Environment extends Events.EventEmitter
     ###
     Gives a full path given a source path. `path` must be inside `@paths`.
 
-    Returns the fist match in @paths that exists.
+    Returns the first match in @paths that exists.
 
     @param {String} path
     @param {Function} callback
@@ -299,12 +301,17 @@ class Environment extends Events.EventEmitter
 
 KonfHandler = (path, callback) ->
     # bootstrap for old api, clientTransform for newest changes, both here for backwards compatibility
-    compile path, callback, {bootstrap: true, clientTransform: true, base: @base_path, production: @production, minify: @minify}
+
+    compile path, @paths.concat(@base_path), callback,
+        bootstrap: true,
+        clientTransform: true,
+        base: @base_path,
+        project_name: @project_name
+        production: @production
+        minify: @minify
 
 ConfHandler = (path, callback) ->
-    # bootstrap for old api, clientTransform for newest changes, both here for backwards compatibility
-    almondize path, callback, { base: @base_path, production: @production, minify: @minify }
-
+    almondize path, callback, { base: @base_path, production: @production, minify: @minify }        
 
 JSMinifyPostProcessor = (data, callback) ->
     if @minify
@@ -322,7 +329,7 @@ CSSMinifyPostProcess = (data, callback) ->
 
 
 Environment.registerHandler "konf", "js", KonfHandler
-Environment.registerHandler "js", "js", ConfHandler
+Environment.registerHandler "js", "js", KonfHandler
 Environment.registerPostProcessor "js", JSMinifyPostProcessor
 Environment.registerPostProcessor "css", CSSMinifyPostProcess
 
@@ -438,9 +445,18 @@ class Builder extends Events.EventEmitter
             else
                 console.log "Build Complete."
             callback(errors)
-        
-        @start()
-                              
+
+        # Delete build folder, if it exists
+        Utils.pathExists build_path, (exists) =>
+            if exists
+                try
+                    Wrench.rmdirSyncRecursive build_path, false
+                catch err
+                    console.log "Failed to delete build folder '#{build_path}'."
+                    return
+            
+            @start()
+                                  
 
     ###
     Excludes files from being built based on a pattern matching

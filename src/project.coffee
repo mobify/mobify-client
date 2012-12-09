@@ -1,4 +1,3 @@
-
 FS = require 'fs'
 Path = require 'path'
 
@@ -40,9 +39,10 @@ class Project
 
         for prop of project_obj
             project[prop] = project_obj[prop]
-
+        
         project.base_directory = Path.join __dirname, '../vendor/mobify-js/' + project.api
-        project.source_directory = Path.join Path.dirname(filename), 'src'
+        dirname = Path.dirname(Path.resolve(process.cwd(), filename))
+        project.source_directory = Path.join dirname, 'src'
         project
 
     constructor: (name) ->
@@ -51,9 +51,7 @@ class Project
         # @source_directory = 'src'
         @build_directory = 'bld'
         @plugins = []
-        @exclude = [
-            "*.tmpl"
-        ]
+        @exclude = ["*.tmpl"]
 
     loadPlugins: () ->
         for plugin in @plugins
@@ -61,7 +59,7 @@ class Project
 
     getEnv: (production=false) ->
         @loadPlugins()
-        new Environment(@source_directory, @base_directory, production)
+        new Environment(@source_directory, @base_directory, @name, production)
 
     build: (options, callback) ->
         ###
@@ -82,7 +80,7 @@ class Project
                 callback new Error("There were some errors during the build.")
                 return
 
-            if options.test
+            if not options.upload
                 callback null, @build_directory
                 return
 

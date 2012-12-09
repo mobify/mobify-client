@@ -199,6 +199,32 @@ exports.fileExists = fileExists = (path, callback) ->
         else
             callback false
 
+exports.fileExistsSync = fileExistsSync = (path) ->
+    try
+        stat = FS.statSync path
+        stat.isFile()
+    catch err
+        false
+
+###
+Checks if a path exists
+
+@param {String} path
+@param {Function} callback
+###
+exports.pathExists = pathExists = (path, callback) ->
+    FS.stat path, (err, stats) =>
+        if err?
+            callback false                
+        else
+            callback true
+
+exports.pathExistsSync = pathExistsSync = (path) ->
+    try
+        FS.statSync path
+        true
+    catch err
+        false
 
 ###
 Reads a stream in to a buffer
@@ -286,7 +312,7 @@ Returns an object literal parsed from the settings file.
 ###
 exports.getGlobalSettings = getMobifySettings = (callback) ->
     path = getGlobalSettingsPath()
-    Path.exists path, (exists) ->
+    pathExists path, (exists) ->
         if exists
             FS.readFile path, (err, data) ->
                 if err
@@ -305,7 +331,7 @@ exports.getGlobalSettings = getMobifySettings = (callback) ->
 exports.setGlobalSettings = setGlobalSettings = (data, callback) ->
     path = getGlobalSettingsPath()
     data = JSON.stringify data, null, 4
-    Path.exists path, (exists) ->
+    pathExists path, (exists) ->
         if not exists
             directory = Path.dirname 'path'
             makeDirectorySync directory
@@ -323,8 +349,8 @@ exports.getVersion = getVersion = () ->
 
     path = scaffoldPath = Path.join __dirname, "..", "package.json"
     package_json = FS.readFileSync(path, encoding='utf8')
-    package = JSON.parse(package_json)
-    version = package.version
+    package_obj = JSON.parse(package_json)
+    version = package_obj.version
 
 ###
 Returns the User-Agent/Server of the tools
@@ -343,3 +369,11 @@ exports.compressJs = compressJs = (js) ->
     ast = Uglify.uglify.ast_mangle ast
     ast = Uglify.uglify.ast_squeeze ast
     Uglify.uglify.gen_code ast
+
+
+###
+Gets the system proxy
+
+###
+exports.getProxy = () ->
+    return process.env['http_proxy'] or process.env['HTTP_PROXY']
