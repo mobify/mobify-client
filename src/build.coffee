@@ -329,7 +329,7 @@ CSSMinifyPostProcess = (data, callback) ->
 
 
 Environment.registerHandler "konf", "js", KonfHandler
-Environment.registerHandler "js", "js", KonfHandler
+Environment.registerHandler "js", "js", ConfHandler
 Environment.registerPostProcessor "js", JSMinifyPostProcessor
 Environment.registerPostProcessor "css", CSSMinifyPostProcess
 
