@@ -32,7 +32,10 @@ module.exports = function compose(confPath, composedCallback, opts) {
             baseUrl: confDir,
             name: "build/almond",
             include: [ confFile ],
-            insertRequire: [confFile ],
+            wrap: {
+                start: ';',
+                end: ';require("' + confFile + '");'
+            },
             out: "mobify-built.js",
             config: {
                 rdust: {
