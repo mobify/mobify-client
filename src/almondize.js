@@ -62,13 +62,18 @@ module.exports = function compose(confPath, composedCallback, opts) {
 
         if (!opts.minify) requireConfig.optimize = "none";
         try {
-            requirejs.optimize(requireConfig, function (buildResponse) {
-                //buildResponse is just a text output of the modules
-                //included. Load the built file for the contents.
-                //Use config.out to get the optimized file contents.
-                var contents = fs.readFileSync(requireConfig.out, 'utf8');
-                composedCallback('', contents);
-            });
+            var fileContents = fs.readFileSync(confPath, 'utf8');
+            if (fileContents.match(/define[\s\S]*?mobifyjs\/transform\/adapt/)) {
+                requirejs.optimize(requireConfig, function (buildResponse) {
+                    //buildResponse is just a text output of the modules
+                    //included. Load the built file for the contents.
+                    //Use config.out to get the optimized file contents.
+                    var contents = fs.readFileSync(requireConfig.out, 'utf8');
+                    composedCallback('', contents);
+                });
+            } else {
+                composedCallback('', fileContents);
+            }
         } catch (err) {
             console.log(err);
             composedCallback(err);
