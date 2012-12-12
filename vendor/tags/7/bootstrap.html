@@ -43,20 +43,20 @@ this.Mobify || (function(detectorUrl, guessFn) {
         // However, that was false robustness, as even one script load failure can result in a very long
         // timeout delay, making page de facto broken in eyes of the user. So, removing this functionality
         // seemed worthwhile, as we can cut out sync+async chainloading code and shorten the tag.
-        doc.write('<script src="' + detectorUrl + '"><\/script>');
+        doc.write('<script src="' + detectorUrl + '#msd"><\/script>');
 
         // If the script never loads, fix next load by opting out of mobify for duration of session
         setTimeout(desktop, 10000);
     } else {
         // Get cookie value out of regexp match, but keep numeric guessFn return values intact
         mode = mode[0] ? mode[2] : mode;
-        
+
         // parseInt will ignore URL after the initial number inside the cookie. This means that both normal
         // and preview-induced captures will go through in same way.
         if (parseInt(mode) > 0) doc.write('<plaintext style="display:none">');
 
         script = doc.createElement(sScript);
-        script.src = detectorUrl;
+        script.src = detectorUrl + '#mad';
 
         // + will result in NaN for number+URL combinations. So, the branch would run only during plain capturing.
         // We do want a <plaintext> during capturing previews as well,
