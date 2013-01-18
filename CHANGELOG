@@ -1,3 +1,5 @@
+v0.3.12 - Fixes CleanCSS performance bug
+
 v0.3.10 - Adds proxy support for pushing
 
 v0.3.8  - Fixes Windows path issue introduced in v0.3.7
