@@ -41,7 +41,7 @@ if (paths.shift()) {
 setTimeout(next);
 
 })(function() {
-    if (/ip(hone|od|ad)|android|blackberry.*applewebkit/i.test(navigator.userAgent)) {
+    if (/ip(hone|od|ad)|android|blackberry.*applewebkit|bb1\d.*mobile/i.test(navigator.userAgent)) {
         return [1, '{{ mobifyjsPath }}']
     }
 });
