@@ -369,3 +369,11 @@ exports.compressJs = compressJs = (js) ->
     ast = Uglify.uglify.ast_mangle ast
     ast = Uglify.uglify.ast_squeeze ast
     Uglify.uglify.gen_code ast
+
+
+###
+Gets the system proxy
+
+###
+exports.getProxy = () ->
+    return process.env['http_proxy'] or process.env['HTTP_PROXY']

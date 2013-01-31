@@ -13,6 +13,7 @@ exports.post = post = (options, path, data, callback) ->
         headers:
             'Content-Length': dataBuffer.length
             'User-Agent': Utils.getUserAgent()
+        proxy: options.proxy || Utils.getProxy()
     
     request = Request opts, (err, response, body) ->
         if err
