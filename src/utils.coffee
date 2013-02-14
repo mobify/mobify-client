@@ -278,12 +278,13 @@ Returns a .tgz stream from a folder.
 @param {String} path
 ###
 exports.archive = (path) ->
-    files = FStream.Reader {
-        path: path,
-        type: "Directory",
+    files = FStream.Reader 
+        path: path
+        type: "Directory"
         filter: () ->
             return !/^[.]/.test @basename
-    }
+        mode: "0755"
+    
     tar = Tar.Pack()
     gz = Zlib.createGzip()
     
