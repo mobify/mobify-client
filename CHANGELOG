@@ -1,3 +1,5 @@
+v0.3.16 - Adds warning about file size
+
 v0.3.15 - Fixes permissions on uploaded tarfiles
         - Adds option to tag injector to specify a custom tag
 
