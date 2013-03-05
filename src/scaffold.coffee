@@ -15,7 +15,8 @@ exports.generate = (name, directory=scaffoldPath, callback) ->
     logger = (source, destination, directory) ->
         console.log "Generating: #{destination}"
 
-    Utils.copy scaffoldPath, name, logger, (err) ->
+
+    Utils.copy directory, name, logger, (err) ->
         if err
             console.log "There was an error generating the scaffold."
             return
