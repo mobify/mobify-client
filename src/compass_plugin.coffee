@@ -3,18 +3,23 @@ Preview = require './preview.coffee'
 Build = require './build.coffee'
 
 
+COMPASS_PROC = if process.platform is 'win32'
+    "compass.bat"
+else
+    "compass"
+
 class CompassPlugin
     bindPreview: (preview_server) ->
             console.log "Binding Compass Preview"
             
-            ChildProcess.exec 'compass clean', (err, stdout, stderr) ->
+            ChildProcess.exec "#{COMPASS_PROC} clean", (err, stdout, stderr) ->
                 if err
                     console.log "Failed to clean SCSS files. Please manually clean files."
 
                 console.log stdout
                 console.log stderr 
 
-                child = ChildProcess.spawn 'compass', ['watch']
+                child = ChildProcess.spawn "#{COMPASS_PROC}", ['watch']
                 
                 child.stderr.on 'data', (data) ->
                     console.log "Compass: #{data}"
@@ -32,14 +37,14 @@ class CompassPlugin
         build.addHook 'prebuild', (callback) ->
             console.log 'Compass Compile'
             
-            ChildProcess.exec 'compass clean', (err, stdout, stderr) ->
+            ChildProcess.exec "#{COMPASS_PROC} clean", (err, stdout, stderr) ->
                 if err
                     console.log "Failed to clean SCSS files. Please manually clean files."
 
                 console.log stdout
                 console.log stderr 
 
-                ChildProcess.exec 'compass compile -e production', (err, stdout, stderr) ->
+                ChildProcess.exec "#{COMPASS_PROC} -e production", (err, stdout, stderr) ->
                     if err
                         callback err
                         return
