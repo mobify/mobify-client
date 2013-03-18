@@ -1,3 +1,5 @@
+v0.3.18 - Fixes compass_plugin resgression
+
 v0.3.17 - Fixes compass_plugin on win32
 
 v0.3.16 - Adds warning about file size

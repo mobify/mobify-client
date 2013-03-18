@@ -44,7 +44,7 @@ class CompassPlugin
                 console.log stdout
                 console.log stderr 
 
-                ChildProcess.exec "#{COMPASS_PROC} -e production", (err, stdout, stderr) ->
+                ChildProcess.exec "#{COMPASS_PROC} compile -e production", (err, stdout, stderr) ->
                     if err
                         callback err
                         return
