@@ -1,0 +1,14 @@
+<script>
+	var params = JSON.parse(decodeURIComponent(window.location.search.substring(1)));
+
+    if (params.name) window.name = params.name;
+
+    if (params.cookie) {
+	    [].forEach.call(params.cookie, function(cookieValue) {
+	    	document.cookie = cookieValue;
+	    });
+	}
+
+    location.href = params.href;
+
+</script>

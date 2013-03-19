@@ -27,6 +27,9 @@ test:
 integrate:
 	test/integration/runner.sh
 
+integrate-tag:
+	test/integration-tag/runner.sh
+
 jenkins:
 	node ./node_modules/.bin/mocha \
         -u exports \
