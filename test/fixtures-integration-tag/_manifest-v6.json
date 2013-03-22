@@ -1,0 +1,16 @@
+
+	{
+		"path": "00.identity",
+		"tagVersion" : "../../test/fixtures-integration-tag/6",
+		"start": "__injectTag/00.identity.html"
+	},
+	{
+		"path": "01.directString",
+		"tagVersion" : "../../test/fixtures-integration-tag/6",
+		"start": "__injectTag/01.directString.html"
+	},
+	{
+		"path": "02.basicResource",
+		"tagVersion" : "../../test/fixtures-integration-tag/6",
+		"start": "__injectTag/02.basicResource.html"
+	}

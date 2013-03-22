@@ -32,12 +32,12 @@ getRequests = () ->
 
 startServers = (done) ->
     @static = new Connect()
-        .use(Connect.static integrationDir)
         .use(Connect.middleware.logger((req, result) ->
-            if ('/listRequests' != result.originalUrl)
-                requestList.push(result.url)
+            if (!result.originalUrl.match(/^\/__\w/))
+                requestList.push(result.originalUrl)
             return
         ))
+        .use(Connect.static integrationDir)
         .use('/', (req, res, next) ->
             driverHost = req.headers.host.replace(PORT.STATIC, PORT.DRIVER)
             if (-1 != (req.headers.referer || '').indexOf(driverHost + '/startTest'))
@@ -45,7 +45,7 @@ startServers = (done) ->
                 res.setHeader("Refresh", "5; url=http://#{driverHost}/endTest?msg=timeout")
             next()
         )
-        .use('/injectTag', (req, res) ->
+        .use('/__injectTag', (req, res) ->
             url = "http://127.0.0.1:#{PORT.TAG}" + req.url
             HTTP.get(url, (req) ->
                 req.on('data', (chunk) ->
@@ -55,7 +55,7 @@ startServers = (done) ->
                 )
             )
         )
-        .use('/listRequests', (req, res) ->
+        .use('/__listRequests', (req, res) ->
             res.end(getRequests());
         )
         .listen PORT.STATIC
@@ -95,7 +95,7 @@ startServers = (done) ->
                     staticHost = req.headers.host.replace(PORT.DRIVER, PORT.STATIC)
                     start = currentTest.start
                     if (start instanceof Object)
-                        start = 'setProps.html?' + encodeURIComponent(JSON.stringify(start))
+                        start = '__setProps.html?' + encodeURIComponent(JSON.stringify(start))
 
                     goal = 'http://' + staticHost + '/' + start
                     res.setHeader("Content-Type", "text/html")
@@ -155,8 +155,8 @@ startServers = (done) ->
 
 testObj = {}
 
-manifest.tests.forEach((test) ->
-    testObj[test.path] = {
+manifest.tests.forEach((test, i) ->
+    testObj[i] = {
         '' : (done) ->
             test.callback = done
     }

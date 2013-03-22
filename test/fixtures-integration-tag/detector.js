@@ -32,8 +32,6 @@ Our minification optimizations are less aggressive/unreadable here, as we are no
 			  , i = host.length
 			  , encodedValue = encodeURIComponent(value);
 
-			debugger;
-
 	    	while (i-- && (getParam(key, doc.cookie) !== '' + value)) {
 	    		doc.cookie = 'mobify-' + key + '=' + encodedValue
 	    			+ '; domain=.' + host.slice(i).join('.') + '; path=/';
@@ -155,7 +153,6 @@ Our minification optimizations are less aggressive/unreadable here, as we are no
 	function loadScripts() {
 		var actuallyCapturing = !!document.getElementsByTagName('plaintext').length;
 		var wantsCapturing = paths.shift() > 0;
-		
 		if (wantsCapturing) paths.push(unmobifyUrl, -1);
 
 		if (wantsCapturing && !actuallyCapturing) {
@@ -183,6 +180,11 @@ Our minification optimizations are less aggressive/unreadable here, as we are no
 
 })({
 	detect: function() {
-	    return [1, 'http://' + location.hostname + ':8080/verifyV7.js'];
-	}
+		var domain = 'http://' + location.hostname + ':8080/';
+		if (/ip(hone|od|ad)|(android|BB1\d;|rim tablet|blackberry).*applewebkit/i.test(navigator.userAgent)) {
+		    return [1, domain + 'removeResources/bld/mobify.js'];
+		} else {
+			return [0, domain + 'verify.js'];
+		}
+	}	
 });

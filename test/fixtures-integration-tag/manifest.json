@@ -1,27 +1,15 @@
 {
 	"tests": [{
-		"path": "7firstload",
-		"tagVersion" : "../../test/fixtures-integration-tag/7",
-		"start": { "href": "injectTag/7firstload.html", "cookie": ["mobify-capture=;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT"]}
+		"path": "removeResources",
+		"tagVersion" : "../../test/fixtures-integration-tag/7-pure",
+		"start": {
+			"href": "__injectTag/7firstload.html",
+			"cookie": ["mobify-capture=; domain=.127.0.0.1; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;"]
+		}
 	},
 	{
-		"path": "7secondload",
-		"tagVersion" : "../../test/fixtures-integration-tag/7",
-		"start": { "href": "injectTag/7secondload.html" }
-	},
-	{
-		"path": "00.identity",
-		"tagVersion" : "../../test/fixtures-integration-tag/6",
-		"start": "injectTag/00.identity.html"
-	},
-	{
-		"path": "01.directString",
-		"tagVersion" : "../../test/fixtures-integration-tag/6",
-		"start": "injectTag/01.directString.html"
-	},
-	{
-		"path": "02.basicResource",
-		"tagVersion" : "../../test/fixtures-integration-tag/6",
-		"start": "injectTag/02.basicResource.html"
+		"path": "removeResources",
+		"tagVersion" : "../../test/fixtures-integration-tag/7-pure",
+		"start": { "href": "__injectTag/7secondload.html" }
 	}]
 }

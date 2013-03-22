@@ -1,0 +1,9 @@
+{
+    "name": "test/fixtures-preview",
+    "api": "1.1",
+    "build_directory": "bld",
+    "plugins": [],
+    "exclude": [
+        "*.tmpl"
+    ]
+}

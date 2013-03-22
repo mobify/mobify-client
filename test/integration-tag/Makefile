@@ -3,5 +3,5 @@ integration-tag:
         -u exports \
         --compilers coffee:coffee-script \
         --ignore-leaks  \
-        --timeout 20000  \
+        --timeout 40000  \
         server.coffee
