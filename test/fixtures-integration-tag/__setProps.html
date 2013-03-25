@@ -1,5 +1,20 @@
 <script>
-	var params = JSON.parse(decodeURIComponent(window.location.search.substring(1)));
+	// This is an intermediate page that sets up state (window.name, cookies)
+	// for a page that is about to be tested.
+
+	var payload = decodeURIComponent(window.location.search.substring(1));
+	
+	// Allow #{...} templating on initialization parameters
+	var values = {
+		host: location.hostname
+	}
+
+	payload = payload.replace(/#\{([^\}]+)\}/, function(all, key) {
+		if (key in values) return values[key];
+		return all;
+	});
+
+	var params = JSON.parse(payload);
 
     if (params.name) window.name = params.name;
 

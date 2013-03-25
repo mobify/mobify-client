@@ -9,7 +9,7 @@ Setup for Mobify.js integration tests. To use:
 
 HTTP = require 'http'
 Connect = require 'connect'
-Url= require 'url'
+Url = require 'url'
 fs = require 'fs'
 
 Injector = require '../../src/injector.coffee'
@@ -17,12 +17,17 @@ Injector = require '../../src/injector.coffee'
 Preview = require '../../src/preview.coffee'
 Scaffold = require '../../src/scaffold.coffee'
 
-PORT = { STATIC: 1341, TAG: 1342, PREVIEW: 8080, DRIVER: 1343 }
+PORT = {
+    STATIC: 1341, # Serve static HTML pages and detector.js, lets client see what requests it made previously
+    TAG: 1342, # Wraps static server, injects tags
+    PREVIEW: 8080, # Serves compiled konfs
+    DRIVER: 1343 # Test driver - this is where browser reports success or failure of a test
+}
 
 integrationDir = "#{__dirname}/../fixtures-integration-tag"
 manifest = JSON.parse(fs.readFileSync(integrationDir + '/manifest.json', 'utf8'))
-testPaths = manifest.tests.map((x) -> x.path)
 
+# A list that tracks requests that were made by the client
 requestList = [];
 getRequests = () ->
     result = requestList.join('\n');
@@ -33,6 +38,7 @@ getRequests = () ->
 startServers = (done) ->
     @static = new Connect()
         .use(Connect.middleware.logger((req, result) ->
+            # Do not record requests starting with /__, as those are related to testcase plumbing and are not real page content
             if (!result.originalUrl.match(/^\/__\w/))
                 requestList.push(result.originalUrl)
             return
@@ -42,9 +48,9 @@ startServers = (done) ->
             driverHost = req.headers.host.replace(PORT.STATIC, PORT.DRIVER)
             if (-1 != (req.headers.referer || '').indexOf(driverHost + '/startTest'))
                 getRequests();
-                res.setHeader("Refresh", "5; url=http://#{driverHost}/endTest?msg=timeout")
             next()
         )
+        # Tag injector is revealed back on original static port to simplify switching between injecting and non-injecting testcases
         .use('/__injectTag', (req, res) ->
             url = "http://127.0.0.1:#{PORT.TAG}" + req.url
             HTTP.get(url, (req) ->
@@ -84,7 +90,7 @@ startServers = (done) ->
         .use('/startTest', (req, res) ->
             currentTestIndex = req.query.test
             req.session.currentTestIndex = currentTestIndex
-            if currentTestIndex >= testPaths.length
+            if currentTestIndex >= manifest.tests.length
                 res.writeHead(302, { Location: 'showResults' })
                 res.end()
             else
@@ -93,14 +99,15 @@ startServers = (done) ->
             
                 doStartTest = () ->
                     staticHost = req.headers.host.replace(PORT.DRIVER, PORT.STATIC)
-                    start = currentTest.start
-                    if (start instanceof Object)
-                        start = '__setProps.html?' + encodeURIComponent(JSON.stringify(start))
+                    initPageURL = currentTest.init
+                    if (initPageURL instanceof Object)
+                        initPageURL = '__setProps.html?' + encodeURIComponent(JSON.stringify(initPageURL))
 
-                    goal = 'http://' + staticHost + '/' + start
+                    goal = 'http://' + staticHost + '/' + initPageURL
                     res.setHeader("Content-Type", "text/html")
                     res.end("<meta http-equiv=\"refresh\" content=\"0;URL='#{goal}'\">")
 
+                # Different testcases may test different tag variants. This will switch tag injector to insert an appropriate tag variant
                 tag.options.tag_version = currentTest.tagVersion || manifest.tagVersion
 
                 projectJSON = "../fixtures-integration-tag/#{currentPath}/project.json"
@@ -108,7 +115,6 @@ startServers = (done) ->
                 if (fs.existsSync(projectJSON))
                     previewHost = req.headers.host.replace(PORT.DRIVER, PORT.PREVIEW)
                     tag.options.mobifyjsPath = "http://#{previewHost}/#{currentPath}/bld/mobify.js"
-                    
 
                     project = Project.load projectJSON
                     project.build_directory = "../fixtures-integration-tag/#{currentPath}/bld"
@@ -137,7 +143,7 @@ startServers = (done) ->
                 callback()            
         )
         .use('/showResults', (req, res) ->
-            res.write('Finished ' + testPaths.length + ' tests.\n')
+            res.write('Finished ' + manifest.tests.length + ' tests.\n')
             result = manifest.tests.map((test, testIndex) ->
                 return test.path + ': ' + req.session[testIndex] || 'success'
             ).join('\n');

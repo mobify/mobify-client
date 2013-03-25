@@ -1,15 +1,15 @@
 {
 	"tests": [{
-		"path": "removeResources",
+		"project": "removeResources",
 		"tagVersion" : "../../test/fixtures-integration-tag/7-pure",
-		"start": {
+		"init": {
 			"href": "__injectTag/7firstload.html",
-			"cookie": ["mobify-capture=; domain=.127.0.0.1; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;"]
+			"cookie": ["mobify-capture=; domain=.#{host}; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;"]
 		}
 	},
 	{
-		"path": "removeResources",
+		"project": "removeResources",
 		"tagVersion" : "../../test/fixtures-integration-tag/7-pure",
-		"start": { "href": "__injectTag/7secondload.html" }
+		"init": { "href": "__injectTag/7secondload.html" }
 	}]
 }
