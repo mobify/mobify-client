@@ -1,3 +1,22 @@
+v0.3.19 - Compatible with 0.10.x
+
+v0.3.18 - Fixes compass_plugin resgression
+
+v0.3.17 - Fixes compass_plugin on win32
+
+v0.3.16 - Adds warning about file size
+
+v0.3.15 - Fixes permissions on uploaded tarfiles
+        - Adds option to tag injector to specify a custom tag
+
+v0.3.14 - Adds BlackBerry 10 Support
+
+v0.3.13 - Updated version of Mobify.js
+
+v0.3.12 - Fixes CleanCSS performance bug
+
+v0.3.10 - Adds proxy support for pushing
+
 v0.3.8  - Fixes Windows path issue introduced in v0.3.7
 
 v0.3.7  - Provides 'project_name' template variable when compiling mobify.js

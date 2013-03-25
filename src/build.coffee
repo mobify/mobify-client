@@ -396,7 +396,7 @@ class Builder extends Events.EventEmitter
             
             walk_cb = (err, paths) =>
                 if err?
-                    @emit err
+                    @emit "error", err
                     return
                 Async.forEach paths, build_path, () =>
                     @emit "end"                
