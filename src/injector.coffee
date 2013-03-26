@@ -28,13 +28,17 @@ include = (klass, mixin) ->
 
 getTags = (opts, version) ->
     tags = {}
-    path = Path.join appSourceDir, 'vendor', 'tags', version + '/'
-    FS.readdirSync(path).forEach (filename) ->
-        if filename.indexOf('.html') is -1
-            return
+    if not isNaN(version) # if version is a number
+        path = Path.join appSourceDir, 'vendor', 'tags', version + '/'
+        FS.readdirSync(path).forEach (filename) ->
+            if filename.indexOf('.html') is -1
+                return
 
-        path = Path.join path, filename
-        tags[Path.basename filename, '.html'] = FS.readFileSync(path).toString()
+            path = Path.join path, filename
+            tags[Path.basename filename, '.html'] = FS.readFileSync(path).toString()
+    else # version is a path to a bootstrap tag
+        tags["bootstrap"] = FS.readFileSync(version).toString()
+        
     tags
 
 tag = (request, response, content, options) ->

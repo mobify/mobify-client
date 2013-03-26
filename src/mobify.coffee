@@ -22,7 +22,7 @@ program
     .option('-m, --minify', 'enable minification and strip logging code')
     .option('-s, --strip', 'strip logging code')
     .option('-t, --tag', 'runs a tag injecting proxy, requires sudo')
-    .option('-u, --tag-version <version>', 'version of the tags to use [6]', '6')
+    .option('-u, --tag-version <version>', 'version of the tags to use [6], or a path to a bootstrap script', '6')
     .action Commands.preview
 
 program

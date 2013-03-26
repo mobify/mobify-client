@@ -278,12 +278,16 @@ Returns a .tgz stream from a folder.
 @param {String} path
 ###
 exports.archive = (path) ->
-    files = FStream.Reader {
-        path: path,
-        type: "Directory",
+    files = FStream.Reader 
+        path: path
+        type: "Directory"
         filter: () ->
+            if (@type == 'File') and (@size >= 5*1000*1000)
+                console.log "File #{@path} (#{@size} bytes) exceeds 5MB maximum and will not be uploaded."
+                return false
             return !/^[.]/.test @basename
-    }
+        mode: "0755"
+    
     tar = Tar.Pack()
     gz = Zlib.createGzip()
     

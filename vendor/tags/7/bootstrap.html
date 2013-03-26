@@ -1,91 +1,48 @@
 <script>
-this.Mobify || (function(detectorUrl, guessFn) {
+this.Mobify || (function(detector, ajs) {
 
-    // Seven deadly sins / Seven ways to win / Seven holy paths to hell / And your trip begins
+this.Mobify = {ajs: ajs, points: [+new Date], tagVersion: [7, 0]};
 
-    var Mobify = this.Mobify = { points: [new Date], tagVersion: [7, 0] } 
-      , sScript = "script" //Repeated strings are exposed as constants to aid minification
-      , sCookie = "cookie"
-      , sMobifyCapture = 'mobify-capture'
-      , doc = document    
-      , firstScript = doc.getElementsByTagName(sScript)[0]
-      , script
-      , mode = doc[sCookie].match(/(; |^)mobify-capture=([^;]*)/) || guessFn && guessFn()
-
-      // These two variables are used by desktop() and are moved out to save minification expenses
-      // of second var declaration
-      , host = location.host
-      , desktop = function() {
-            // Disable mobify <plaintext> capturing on all possible subdomain matches.
-            // We do that to make mobify disabling work no matter what domain the cookie was originally set on
-            // Since this is done only in catastrophic circumstances, I consider resulting overdisabling tolerable
-            // User will have to restart browser to clear that away
-
-            while (!Mobify.detector && (host = host.replace(/^\.?[^.]*/, ''))) {
-                doc[sCookie] = sMobifyCapture + '=0; domain=.' + host + '; path=/';
-            }
-        };
-
-    // The many modes of mobify-capture cookie:
-    // Not set at all - we are lost and confused, and need to run detection
-    // Empty - user or detector code explicitly opted out of transform, no capture
-    // Number that is zero - a.js or other light adaptation, needs no capture
-    // Number that is not zero - adaptation with capture required 
-    // A string with zero in front - preview of light adaptation
-    // A string with nonzero number in front - preview of capture-based adaptation
-
-    // The 'no cookie at all' branch
-    // Name can be used by preview to force synchronous detection and reset existing cookie state
-    // Note that sScript.u is used as shorthand to undefined
-    if ((mode === sScript.u) || (0 == name.indexOf(sMobifyCapture))) {
-
-        // Note that we got only one source here. Older tags used to allow failover with multiple sources.
-        // However, that was false robustness, as even one script load failure can result in a very long
-        // timeout delay, making page de facto broken in eyes of the user. So, removing this functionality
-        // seemed worthwhile, as we can cut out sync+async chainloading code and shorten the tag.
-        doc.write('<script src="' + detectorUrl + '#msd"><\/script>');
-
-        // If the script never loads, fix next load by opting out of mobify for duration of session
-        setTimeout(desktop, 10000);
+function next() {
+    src = paths.shift() || 1;
+    if (Mobify.api || +src) {
+        ~src || (doc.cookie = smobifypath + '=; path=/');
     } else {
-        // Get cookie value out of regexp match, but keep numeric guessFn return values intact
-        mode = mode[0] ? mode[2] : mode;
-
-        // parseInt will ignore URL after the initial number inside the cookie. This means that both normal
-        // and preview-induced captures will go through in same way.
-        if (parseInt(mode) > 0) doc.write('<plaintext style="display:none">');
-
-        script = doc.createElement(sScript);
-        script.src = detectorUrl + '#mad';
-
-        // + will result in NaN for number+URL combinations. So, the branch would run only during plain capturing.
-        // We do want a <plaintext> during capturing previews as well,
-        // but probably don't want to complicate debugging by reverting to desktop when a preview URL fails
-        if (+mode) { 
-            script.onload = script.onerror = desktop;
-        }
+        script = doc.createElement(sscript);
+        script.src = src;
+        script.onload = script.onerror = next;
         firstScript.parentNode.insertBefore(script, firstScript);
     }
-})("//cdn.mobify.com/generic/detector.js", function() {
-    // Called when we do not have a cookie that tells us if capturing is needed to determine
-    // if plaintext needs to be emitted. This is just first guess - permanent cookie-altering
-    // decision is still going to be made by detector.js
+}
 
-    // Return values:
-    // 1 = capture
-    // 0 = do not capture
-    // undefined = uncertain, will have to do sync detection
-    // Use of 0 is suggested only when you are really sure that no capturing would be needed,
-    // as if detector.js determines that it actually WAS needed, you are SOL on this particular
-    // page load. If not sure, return undefined.
+var doc = document
+  , sscript = 'script'
+  , smobify = 'mobify'
+  , smobifycom = smobify + '.com/'
+  , smobifypath = smobify + '-path'
+  , sunmobify = smobifycom + 'un' + smobify + '2.js'
+  , script
+  , firstScript = doc.getElementsByTagName(sscript)[0]
+  , src = 1
+  , matchedPath = /((; )|#|&|^)mobify-path=([^&;]*)/g.exec(location.hash + '; ' + doc.cookie)
+  , paths = matchedPath
+        && (src = matchedPath[3])
+        && !+(src = matchedPath[2] && sessionStorage[smobifypath] || src)
+        && [1, '//preview.' + smobifycom + escape(src), 1];
 
-    // iPad and Android tablets intentionally removed from list of autocapture devices. 
-    // In most cases, we are not transforming them to begin with. If we are,
-    // I expect them to operate on faster networks, and to be able to handle the impact of
-    // first load leakage better.
+src = src && detector();
+paths = paths || src || [0, ajs];
 
-    // Of course, you can adjust this to your heart's content.
-    // TODO: Add IE10 on touch-capable Windows 8 platforms.
-    if (/ip(hone|od)|android.*mobile|BB1\d; |blackberry.*applewebkit/i.test(navigator.userAgent)) return 1;
+if (paths.shift()) {
+    paths.push('//cdn.' + sunmobify, '//files01.' + sunmobify, -1);
+    doc.write('<plaintext style="display:none">');
+}
+
+setTimeout(next);
+
+})(function() {
+    if (/ip(hone|od|ad)|android|blackberry.*applewebkit|bb1\d.*mobile/i.test(navigator.userAgent)) {
+        return [1, '{{ mobifyjsPath }}']
+    }
 });
 </script>
