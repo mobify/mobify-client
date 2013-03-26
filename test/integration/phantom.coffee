@@ -21,8 +21,10 @@ page.open TAG_SERVER_URL, (status) ->
         outerHTML = page.evaluate ->
             document.documentElement.outerHTML
 
-        needle = "Welcome to your first Mobify.js Mobile Page"
-        status = if !!~outerHTML.indexOf needle then 0 else 1
-        exit status
+        needles = [ "Welcome to your first Mobify.js Mobile Page", "Horus Isis Osiris" ]
+        for needle in needles
+            if !~outerHTML.indexOf needle then return exit 1
+
+        return exit 0
 
     setTimeout mobifyjs_ready, 5000
