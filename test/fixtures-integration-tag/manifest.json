@@ -1,7 +1,7 @@
 {
 	"tests": [{
 		"project": "removeResources",
-		"tagVersion" : "../../test/fixtures-integration-tag/7-pure",
+		"tagVersion" : "../../test/fixtures-integration-tag/7-pure/bootstrap.html",
 		"init": {
 			"href": "__injectTag/7firstload.html",
 			"cookie": ["mobify-capture=; domain=.#{host}; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;"]
@@ -9,7 +9,7 @@
 	},
 	{
 		"project": "removeResources",
-		"tagVersion" : "../../test/fixtures-integration-tag/7-pure",
+		"tagVersion" : "../../test/fixtures-integration-tag/7-pure/bootstrap.html",
 		"init": { "href": "__injectTag/7secondload.html" }
 	}]
 }
