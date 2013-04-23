@@ -2,5 +2,5 @@ Compass = require './compass.coffee'
 Build = require './build.coffee'
 Preview = require './preview.coffee'
 
-Preview.registerPlugin CompassPlugin
-Build.registerPlugin CompassPlugin
+Preview.registerPlugin Compass.plugin
+Build.registerPlugin Compass.plugin
