@@ -19,7 +19,8 @@ program
     .description('Runs a local server you can preview against.')
     .option('-p, --port <port>', 'port to bind to [8080]', parseInt, 8080)
     .option('-a, --address <address>', 'address to bind to [0.0.0.0]', '0.0.0.0')
-    .option('-m, --minify', 'enable minification')
+    .option('-m, --minify', 'enable minification and strip logging code')
+    .option('-s, --strip', 'strip logging code')
     .option('-t, --tag', 'runs a tag injecting proxy, requires sudo')
     .option('-u, --tag-version <version>', 'version of the tags to use [6], or a path to a bootstrap script', '6')
     .action Commands.preview

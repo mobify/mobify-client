@@ -33,6 +33,10 @@ exports.preview = preview = (options) ->
         environment = project.getEnv()
 
         if options.minify
+            environment.minify = true
+            environment.production = true
+
+        if options.strip
             environment.production = true
 
         server = Preview.createServer environment

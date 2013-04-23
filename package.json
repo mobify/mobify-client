@@ -16,7 +16,9 @@
     "clean-css": "https://nodeload.github.com/rrjamie/clean-css/legacy.tar.gz/9db3294535c260d17844c9215b0a676969dc928e",
     "wrench": "1.3.9",
     "connect": "2.4.5",
-    "express": "2.5.11"
+    "express": "2.5.11",
+    "glob": "3.1.12",
+    "dustjs-linkedin": "1.1.0"    
   },
   "devDependencies": {
     "mocha": "1.4.2"

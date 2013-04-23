@@ -17,6 +17,7 @@ Wrench = require 'wrench'
 Utils = require './utils.coffee'
 
 compile = require '../lib/compile.js'
+almondize = require './almondize.js'
 
 
 ###
@@ -193,10 +194,10 @@ class Environment extends Events.EventEmitter
         filter_cb = (results) =>
             if results.length is 0
                 callback new Error("No possible source file for '#{path}'.")
-            else if results.length is 1
+            else #if results.length is 1
                 callback null, results[0]
-            else
-                callback new Error("More than one possible source file for '#{path}'.")
+            #else
+            #    callback new Error("More than one possible source file for '#{path}'.")
         
         Async.filter paths, exists, filter_cb
 
@@ -300,23 +301,27 @@ class Environment extends Events.EventEmitter
 
 KonfHandler = (path, callback) ->
     # bootstrap for old api, clientTransform for newest changes, both here for backwards compatibility
+
     compile path, @paths.concat(@base_path), callback,
         bootstrap: true,
         clientTransform: true,
         base: @base_path,
         project_name: @project_name
         production: @production
+        minify: @minify
 
+ConfHandler = (path, callback) ->
+    almondize path, callback, { base: @base_path, production: @production, minify: @minify }        
 
 JSMinifyPostProcessor = (data, callback) ->
-    if @production
+    if @minify
         code = Utils.compressJs(data.toString())
         callback null, code
     else
         callback null, data
 
 CSSMinifyPostProcess = (data, callback) ->
-    if @production
+    if @minify
         minified = CleanCSS.process data.toString()
         callback null, minified
     else
@@ -324,6 +329,7 @@ CSSMinifyPostProcess = (data, callback) ->
 
 
 Environment.registerHandler "konf", "js", KonfHandler
+Environment.registerHandler "js", "js", ConfHandler
 Environment.registerPostProcessor "js", JSMinifyPostProcessor
 Environment.registerPostProcessor "css", CSSMinifyPostProcess
 

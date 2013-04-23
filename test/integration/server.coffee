@@ -11,6 +11,7 @@ preview server runs correctly.
 
 ###
 Connect = require 'connect'
+Fs = require 'fs'
 
 Injector = require '../../src/injector.coffee'
 {Project} = require '../../src/project.coffee'
@@ -34,6 +35,8 @@ PREVIEW_PORT = 1343
 
 # Preview Server
 scaffold_ready = () ->
+
+    Fs.writeFileSync('test/fixtures-preview/src/tmpl/home.tmpl', Fs.readFileSync('test/integration/home.tmpl'))
     project = Project.load 'test/fixtures-preview/project.json'
     environment = project.getEnv()
     @preview = Preview.createServer environment
