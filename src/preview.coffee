@@ -63,6 +63,7 @@ class PreviewHandler
                 if response_data?
                     response.write response_data
                 response.end()
+        request.resume()
 
     # Write a file to disk from the request body or from a location indicated by
     # the location header.
