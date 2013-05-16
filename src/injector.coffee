@@ -45,7 +45,15 @@ tag = (request, response, content, options) ->
     opts = copy options
     opts.tags = getTags opts, options.tag_version
     try
-        response.end insertTags content, opts
+        response.write insertTags content, opts
+
+        # Due to a bug in 0.10.x, .end() causes HTTPS to
+        # be prematurely closed. If we wait a bit (which
+        # is fine because this is meant to be run locally)
+        # we can avoid this
+        setTimeout (->
+            response.end()
+        ), 50
     catch error
         console.log 'Unable to insert tags:' + request.url
         response.end content
