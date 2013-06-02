@@ -1,0 +1,10 @@
+define(['src/dust-core-1.2.3.js'], function () {
+	// src/tmpl/_footer.tmpl
+	(function(){dust.register("src/tmpl/_footer",body_0);function body_0(chk,ctx){return chk;}return body_0;})();
+	// src/tmpl/_header.tmpl
+	(function(){dust.register("src/tmpl/_header",body_0);function body_0(chk,ctx){return chk.write("<header><div class=\"title\"><h1>Welcome to your first Mobify.js Mobile Page</h1><h2>As an initial example of content selection, we've selected the title of your site and placed it in _header.tmpl:</h2><p class=\"extract\">").reference(ctx.getPath(false,["header","title"]),ctx,"h").write("</p></div></header>");}return body_0;})();
+	// src/tmpl/base.tmpl
+	(function(){dust.register("src/tmpl/base",body_0);function body_0(chk,ctx){return chk.reference(ctx.get("doctype"),ctx,"h",["s"]).reference(ctx.get("$html"),ctx,"h",["openTag","s"]).reference(ctx.get("$head"),ctx,"h",["openTag","s"]).block(ctx.getBlock("baseScripts"),ctx,{"block":body_1},null).block(ctx.getBlock("head"),ctx,{"block":body_2},null).write("</head>").reference(ctx.get("$body"),ctx,"h",["openTag","s"]).block(ctx.getBlock("body"),ctx,{"block":body_3},null).block(ctx.getBlock("scripts"),ctx,{"block":body_5},null).write("</body></html>");}function body_1(chk,ctx){return chk.section(ctx.get("lib_import"),ctx,{},null).write("    ");}function body_2(chk,ctx){return chk.reference(ctx.get("$head"),ctx,"h",["innerHTML","s"]).write("<link rel=\"stylesheet\" href=\"").reference(ctx.getPath(false,["config","configDir"]),ctx,"h").write("style.css\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no\" />");}function body_3(chk,ctx){return chk.partial("_header",ctx,null).block(ctx.getBlock("content"),ctx,{"block":body_4},null).partial("_footer",ctx,null);}function body_4(chk,ctx){return chk.reference(ctx.get("$body"),ctx,"h",["innerHTML","s"]);}function body_5(chk,ctx){return chk;}return body_0;})();
+	// src/tmpl/home.tmpl
+	(function(){dust.register("src/tmpl/home",body_0);function body_0(chk,ctx){return chk.write("<html><head></head><body><h1>Test</h1></body></html>");}return body_0;})();
+});

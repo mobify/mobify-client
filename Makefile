@@ -27,13 +27,4 @@ test:
 integrate:
 	test/integration/runner.sh
 
-jenkins:
-	node ./node_modules/.bin/mocha \
-        -u exports \
-        -R xunit \
-        --compilers coffee:coffee-script \
-        --ignore-leaks  \
-        --timeout 10000  \
-        $(TESTS) | egrep '^</?test' | tee report.xml
-
 .PHONY: test
