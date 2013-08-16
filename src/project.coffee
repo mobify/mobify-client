@@ -42,13 +42,13 @@ class Project
         
         project.base_directory = Path.join __dirname, '../vendor/mobify-js/' + project.api
         dirname = Path.dirname(Path.resolve(process.cwd(), filename))
-        project.source_directory = Path.join dirname, 'src'
+        project.source_directory = Path.join dirname, project.source_directory
         project
 
     constructor: (name) ->
         @name = name
         @api = "1.1"
-        # @source_directory = 'src'
+        @source_directory = 'src'
         @build_directory = 'bld'
         @plugins = []
         @exclude = ["*.tmpl"]
