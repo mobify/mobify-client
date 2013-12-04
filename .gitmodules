@@ -7,3 +7,6 @@
 [submodule "vendor/mobify-js/1.2/base"]
 	path = vendor/mobify-js/1.2/base
     url = https://github.com/mobify/mobifyjs.git
+[submodule "vendor/mobify-js/1.3/base"]
+	path = vendor/mobify-js/1.3/base
+	url = git@github.com:mobify/mobifyjs.git
