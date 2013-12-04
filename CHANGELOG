@@ -1,3 +1,8 @@
+v0.3.26 - Updates Mobify.js for JazzCat last-modified heuristic
+        - Adds fix for <styles> in <scripts>
+
+v0.3.25 -
+
 v0.3.24 - Allow user to change src and bld directories of a project.
 
 v0.3.23 - Updates CleanCSS
