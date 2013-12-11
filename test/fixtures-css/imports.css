@@ -1,0 +1,8 @@
+html {
+    background: black;
+};
+@import url("http://example.com/foo.css");
+@import url("./imported.css");
+body {
+    background: blue;
+};

@@ -299,7 +299,7 @@ class Environment extends Events.EventEmitter
         Async.concat(@paths, iterator, clean)
         
 
-KonfHandler = (path, callback) ->
+exports.KonfHandler = KonfHandler = (path, callback) ->
     # bootstrap for old api, clientTransform for newest changes, both here for backwards compatibility
     compile path, @paths.concat(@base_path), callback,
         bootstrap: true,
@@ -309,14 +309,14 @@ KonfHandler = (path, callback) ->
         production: @production
 
 
-JSMinifyPostProcessor = (data, full_path, callback) ->
+exports.JSMinifyPostProcessor = JSMinifyPostProcessor = (data, full_path, callback) ->
     if @production
         code = Utils.compressJs(data.toString())
         callback null, code
     else
         callback null, data
 
-CSSMinifyPostProcess = (data, full_path, callback) ->
+exports.CSSMinifyPostProcess = CSSMinifyPostProcess = (data, full_path, callback) ->
     if @production
         if @inline_imports
             minified = CleanCSS.process(data.toString(), {processImport: true, relativeTo: Path.dirname(full_path)})
