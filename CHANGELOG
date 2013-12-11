@@ -1,4 +1,7 @@
+v0.3.28 - Fixes issue with @import directives being dropped.
+
 v0.3.27 - Adds Mobify.js v1.3 with experimental support for IE10+
+
 v0.3.26 - Updates Mobify.js for JazzCat last-modified heuristic
         - Adds fix for <styles> in <scripts>
 

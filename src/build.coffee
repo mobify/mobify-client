@@ -75,7 +75,7 @@ class Environment extends Events.EventEmitter
         handlers.push handler
         @post_processors[ext] = handlers
 
-    constructor: (paths, base_path, project_name, production=false) ->
+    constructor: (paths, base_path, project_name, production=false, inline_imports=false) ->
         if paths instanceof Array
             @paths = paths
         else
@@ -83,6 +83,7 @@ class Environment extends Events.EventEmitter
         @base_path = base_path
         @production = production
         @project_name = project_name
+        @inline_imports = inline_imports
 
     ###
     Class Property Accessors
@@ -229,7 +230,7 @@ class Environment extends Events.EventEmitter
                 if err
                     callback err
                     return
-                post_processor.call @, data, callback
+                post_processor.call @, data, full_path, callback
     ###
     Gives a file, given an source path
 
@@ -298,7 +299,7 @@ class Environment extends Events.EventEmitter
         Async.concat(@paths, iterator, clean)
         
 
-KonfHandler = (path, callback) ->
+exports.KonfHandler = KonfHandler = (path, callback) ->
     # bootstrap for old api, clientTransform for newest changes, both here for backwards compatibility
     compile path, @paths.concat(@base_path), callback,
         bootstrap: true,
@@ -308,16 +309,19 @@ KonfHandler = (path, callback) ->
         production: @production
 
 
-JSMinifyPostProcessor = (data, callback) ->
+exports.JSMinifyPostProcessor = JSMinifyPostProcessor = (data, full_path, callback) ->
     if @production
         code = Utils.compressJs(data.toString())
         callback null, code
     else
         callback null, data
 
-CSSMinifyPostProcess = (data, callback) ->
+exports.CSSMinifyPostProcess = CSSMinifyPostProcess = (data, full_path, callback) ->
     if @production
-        minified = CleanCSS.process data.toString()
+        if @inline_imports
+            minified = CleanCSS.process(data.toString(), {processImport: true, relativeTo: Path.dirname(full_path)})
+        else
+            minified = CleanCSS.process(data.toString(), {processImport: false})
         callback null, minified
     else
         callback null, data
