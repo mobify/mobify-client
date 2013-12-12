@@ -84,7 +84,7 @@ class Project
                 callback null, @build_directory
                 return
 
-            tgz_stream = Utils.archive '.'
+            tgz_stream = Utils.archive '.', @exclude
             API.upload options, name, tgz_stream, callback
 
     save: (path='project.json') ->
