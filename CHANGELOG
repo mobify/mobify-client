@@ -1,4 +1,5 @@
 v0.3.28 - Fixes issue with @import directives being dropped.
+        - Excluded files are not uploaded in any folder
 
 v0.3.27 - Adds Mobify.js v1.3 with experimental support for IE10+
 
