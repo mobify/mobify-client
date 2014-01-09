@@ -123,10 +123,13 @@ exports.PreviewMiddleware = PreviewMiddleware = (request, response, next) ->
 
     next()
 
-exports.createServer = createServer = (env) ->
+exports.createServer = createServer = (env, opts) ->
     handler = new PreviewHandler env
 
-    app = Express.createServer(Connect.middleware.logger('tiny'), PreviewMiddleware)
+    if opts
+        app = Express.createServer(opts, Connect.middleware.logger('tiny'), PreviewMiddleware)
+    else
+        app = Express.createServer(Connect.middleware.logger('tiny'), PreviewMiddleware)
 
     app.get '/', (request, response) ->
         path = Path.join __dirname, 'index.html'

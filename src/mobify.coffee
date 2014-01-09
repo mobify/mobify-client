@@ -18,6 +18,7 @@ program
     .command('preview')
     .description('Runs a local server you can preview against.')
     .option('-p, --port <port>', 'port to bind to [8080]', parseInt, 8080)
+    .option('-s, --sslPort <sslPort>', 'port to bind to [8443]', parseInt, 8443)
     .option('-a, --address <address>', 'address to bind to [0.0.0.0]', '0.0.0.0')
     .option('-m, --minify', 'enable minification')
     .option('-t, --tag', 'runs a tag injecting proxy, requires sudo')
