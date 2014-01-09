@@ -12,6 +12,7 @@ The Mobify Client is a command line tool for building and deploying Mobify.js pr
 
         -h, --help                  output usage information
         -p, --port <port>           port to bind to [8080]
+        -s, --sslPort <sslPort>     ssl port to bind to [8443]
         -a, --address <address>     address to bind to [0.0.0.0]
         -m, --minify                enable minification
         -t, --tag                   runs a tag injecting proxy, requires sudo
