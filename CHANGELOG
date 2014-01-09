@@ -1,3 +1,5 @@
+v0.3.29 - Adds ability to server `preview` over HTTPS
+
 v0.3.28 - Fixes issue with @import directives being dropped.
         - Excluded files are not uploaded in any folder
 
