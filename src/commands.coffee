@@ -35,14 +35,23 @@ exports.preview = preview = (options) ->
         if options.minify
             environment.production = true
 
-        server = Preview.createServer environment
-        server.listen options.port, options.address
-        console.log "Running Preview at address #{options.address} and port #{options.port}"
+        key = FS.readFileSync(Path.join appSourceDir, 'vendor', 'certs', 'server.key')
+        cert = FS.readFileSync(Path.join appSourceDir, 'vendor', 'certs', 'server.crt')
+
+        opts =
+            key: key
+            cert: cert
+
+        httpServer = Preview.createServer environment
+        httpsServer = Preview.createServer environment, opts
+        httpServer.listen options.port, options.address
+        httpsServer.listen options.sslPort, options.address
+        console.log "Running Preview at address #{options.address} and port #{options.port}/#{options.sslPort}"
         
         if options.tag
             host = '0.0.0.0'
             port = 80
-            opts = 
+            opts =
                 tag_version: options.tagVersion
             server = Injector.createServer opts
             server.listen port, host
@@ -50,8 +59,8 @@ exports.preview = preview = (options) ->
 
             port = 443
             opts.port = port
-            opts.key = FS.readFileSync(Path.join appSourceDir, 'vendor', 'certs', 'server.key')
-            opts.cert = FS.readFileSync(Path.join appSourceDir, 'vendor', 'certs', 'server.crt')
+            opts.key = key
+            opts.cert = cert
             opts.proxy_module = HTTPS
             opts.server = Injector.HttpsServer
             server = Injector.createServer opts
