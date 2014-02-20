@@ -1,3 +1,5 @@
+v0.3.30 - Adds SVG mimetype to preview
+
 v0.3.29 - Adds ability to server `preview` over HTTPS
         - Bumps Mobify.js v1.1 for Firefox Fix
 
