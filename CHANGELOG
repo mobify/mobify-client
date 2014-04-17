@@ -1,3 +1,6 @@
+v0.3.33 - Fixes bug in i18n for Mobify.js v1.0, v1.1, and v1.3
+        - Fixes compatibility issue in v1.1 and v1.3 with the v7 Mobify tag
+
 v0.3.32 - Bug fixes in Mobify.js 1.3
 
 v0.3.31 - Updates Mobify.js 1.3 to use Mobify service APIs from bower
