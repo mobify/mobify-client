@@ -1,3 +1,5 @@
+v0.3.34 - Make v1.1 point at v1.1 submodule not v1.3
+
 v0.3.33 - Fixes bug in i18n for Mobify.js v1.0, v1.1, and v1.3
         - Fixes compatibility issue in v1.1 and v1.3 with the v7 Mobify tag
 
