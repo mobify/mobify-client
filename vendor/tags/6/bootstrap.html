@@ -31,7 +31,7 @@ var doc = document
   , firstScript
   , paths = [false, 1]
   , bundle
-  , Mobify = this.Mobify = {points: [+new Date], tagVersion: [6, 1]}
+  , Mobify = this.Mobify = {points: [+new Date], tagVersion: [6, 1], ajs: '{{ mobifyAjsPath }}'}
   , matchedPath = /((; )|#|&|^)mobify-path=([^&;]*)/g.exec(location.hash + '; ' + doc.cookie);
 
 // If path matched, load from preview. 
@@ -68,5 +68,6 @@ if (paths.shift()) {
     if (/ip(hone|od|ad)|android|blackberry.*applewebkit|bb1\d.*mobile/i.test(navigator.userAgent)){
         return [true, '{{ mobifyjsPath }}']
     }
+    return [0, Mobify.ajs];
 });
 </script>
