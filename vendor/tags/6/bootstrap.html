@@ -1,6 +1,8 @@
 <script>
 (function(detector) {
 
+// If the mobify bundle doesn't load correctly, we re-render the original content,
+// which includes the tag. We don't want to get into a recursive loop.
 if (this.Mobify) return;
 
 // Initial load and followup.
