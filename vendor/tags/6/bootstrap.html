@@ -1,6 +1,8 @@
 <script>
 (function(detector) {
 
+// If the mobify bundle doesn't load correctly, we re-render the original content,
+// which includes the tag. We don't want to get into a recursive loop.
 if (this.Mobify) return;
 
 // Initial load and followup.
@@ -31,7 +33,7 @@ var doc = document
   , firstScript
   , paths = [false, 1]
   , bundle
-  , Mobify = this.Mobify = {points: [+new Date], tagVersion: [6, 1]}
+  , Mobify = this.Mobify = {points: [+new Date], tagVersion: [6, 1], ajs: '{{ mobifyAjsPath }}'}
   , matchedPath = /((; )|#|&|^)mobify-path=([^&;]*)/g.exec(location.hash + '; ' + doc.cookie);
 
 // If path matched, load from preview. 
@@ -68,5 +70,6 @@ if (paths.shift()) {
     if (/ip(hone|od|ad)|android|blackberry.*applewebkit|bb1\d.*mobile/i.test(navigator.userAgent)){
         return [true, '{{ mobifyjsPath }}']
     }
+    return [0, Mobify.ajs];
 });
 </script>
