@@ -10,7 +10,7 @@ all:
 
 archive: 
 	git submodule update --init --recursive
-	git-archive-all --prefix='mobify-client/' tmp.tar 
+	git-archive-all --prefix='mobify-client/' tmp.tar
 	tar -xf tmp.tar
 	tar --exclude='*www*' -czhf mobify-client.`bin/mobify.js -V`.tgz mobify-client
 	rm -rf mobify-client;
