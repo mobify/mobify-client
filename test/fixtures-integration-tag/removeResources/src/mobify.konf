@@ -1,0 +1,11 @@
+{>"/base/lib/base_konf.konf"/}
+{<tmpl}{/tmpl}
+{<data} {
+
+'OUTPUTHTML': function(context) {
+	context.data('$html').find('iframe, img, script').remove();
+
+    return context.data('$html').prop('outerHTML') + '<script src="http://' + location.hostname + ':8080/verify.js"></scr'+ 'ipt>';
+}
+
+} {/data}
