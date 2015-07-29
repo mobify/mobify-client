@@ -19,10 +19,9 @@ if (this.Mobify) return;
         // tab.
         //
         // Related ticket: https://mobify.atlassian.net/browse/RTM-280
-        //
-        //if (doc.visibilityState && doc.hidden) {
-        //    return;
-        //}
+        if (doc.visibilityState && doc.hidden) {
+            return;
+        }
 
         doc.cookie = mobifypath + '=; path=/';
     }
