@@ -1,4 +1,4 @@
-v0.3.40 - Include Mobify.js 1.1.1 API
+v0.3.40 - Include Mobify.js 1.1.1 API, fix for Node 0.12.x on Windows
 
 v0.3.39 - Make mobify-client compatible with IO.js 1.1.0 and Node.js 0.12.x
 
