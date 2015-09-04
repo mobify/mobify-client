@@ -1,4 +1,7 @@
+v0.3.40 - Include Mobify.js 1.1.1 API
+
 v0.3.39 - Make mobify-client compatible with IO.js 1.1.0 and Node.js 0.12.x
+
 v0.3.38 - Update 1.0, 1.1 and 1.3 with proper fix for iOS 8.0 scrolling
           issue
 v0.3.37 - Revert updates to 1.0, 1.1 and 1.3 that attempted to fix an iOS 8.0
