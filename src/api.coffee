@@ -35,30 +35,7 @@ exports.post = post = (options, path, data, callback) ->
         
         callback null, response
 
-    writeThrottled = (buffer, destination, increment=32*1024, sleep=100) ->
-        if increment < buffer.length
-            endpoint = increment
-        else
-            endpoint = buffer.length
-
-        if endpoint == 0
-            destination.end()
-            return
-
-        sliced_buffer = buffer.slice 0, endpoint
-        destination.write sliced_buffer
-
-        remaining_buffer = buffer.slice endpoint, buffer.length
-
-        repeat = () ->
-            writeThrottled remaining_buffer, destination, increment, sleep
-
-        setTimeout repeat, sleep
-
-    if process.platform == 'win32'
-        writeThrottled dataBuffer, request
-    else
-        request.end dataBuffer
+    request.end dataBuffer
     
 
 exports.upload = upload = (options, project, stream, callback) ->
