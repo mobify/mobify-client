@@ -1,18 +1,23 @@
 [submodule "vendor/mobify-js/1.0/base"]
 	path = vendor/mobify-js/1.0/base
     url = https://github.com/mobify/mobifyjs.git
+    branch = 1.0
 [submodule "vendor/mobify-js/1.1/base"]
 	path = vendor/mobify-js/1.1/base
     url = https://github.com/mobify/mobifyjs.git
+    branch = v1.1
 [submodule "vendor/mobify-js/1.2/base"]
 	path = vendor/mobify-js/1.2/base
     url = https://github.com/mobify/mobifyjs.git
+    branch = 1.2
 [submodule "vendor/mobify-js/1.3/base"]
 	path = vendor/mobify-js/1.3/base
 	url = git@github.com:mobify/mobifyjs.git
+    branch = v1.3
 [submodule "vendor/mobify-js/1.1.1/base"]
 	path = vendor/mobify-js/1.1.1/base
 	url = https://github.com/mobify/mobifyjs
+    branch = v1.1.1
 [submodule "vendor/mobify-js/1.3.1/base"]
 	path = vendor/mobify-js/1.3.1/base
 	url = git@github.com:mobify/mobifyjs.git
@@ -20,8 +25,8 @@
 [submodule "vendor/mobify-js/1.0.1/base"]
 	path = vendor/mobify-js/1.0.1/base
 	url = git@github.com:mobify/mobifyjs.git
-	branch = 1.0.1-scroll-fix
+	branch = 1.0.1
 [submodule "vendor/mobify-js/1.1.2/base"]
 	path = vendor/mobify-js/1.1.2/base
 	url = git@github.com:mobify/mobifyjs.git
-	branch = 1.1.2-scroll-fix
+	branch = 1.1.2
