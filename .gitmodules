@@ -21,3 +21,7 @@
 	path = vendor/mobify-js/1.0.1
 	url = git@github.com:mobify/mobifyjs.git
 	branch = 1.0.1-scroll-fix
+[submodule "vendor/mobify-js/1.1.2"]
+	path = vendor/mobify-js/1.1.2
+	url = git@github.com:mobify/mobifyjs.git
+	branch = 1.1.2-scroll-fix
