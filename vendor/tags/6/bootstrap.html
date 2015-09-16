@@ -5,19 +5,42 @@
 // which includes the tag. We don't want to get into a recursive loop.
 if (this.Mobify) return;
 
-// Initial load and followup.
-// If src=1, don't load.
-// If src=-1, total failure, set the opt out cookie.
-// Otherwise just load the script.
-function load(src, callback) {
-    if (+src) return ~src || (doc.cookie = mobifypath + '=; path=/');
+    // Set mobify-path=(blank) indicating a critical failure. Since this is
+    // presumably due to a serious failure like a CDN failure, we serve the
+    // desktop experience on the next reload.
+    function setOptOutCookie() {
+        // This workaround addresses an iOS fallthrough issue, where iOS 8's
+        // "preload top hits" option will load a Mobified page in the
+        // background when typing in an address into the URL bar. Safari
+        // seems to cancel the mobify.js download, resulting in us dropping
+        // a failure cookie.
+        //
+        // We get around this by ignoring mobify.js failures in a background
+        // tab.
+        //
+        // Related ticket: https://mobify.atlassian.net/browse/RTM-280
+        if (doc.visibilityState && doc.hidden) {
+            return;
+        }
 
-    script = doc.createElement(sscript);
-    firstScript = doc.getElementsByTagName(sscript)[0];
-    script.src = src;
-    callback && (script.onload = script.onerror = callback);
-    firstScript.parentNode.insertBefore(script, firstScript);
-}
+        doc.cookie = mobifypath + '=; path=/';
+    }
+
+    // Initial load and followup.
+    // If src=1, don't load.
+    // If src=-1, total failure, set the opt out cookie.
+    // Otherwise just load the script.
+    function load(src, callback) {
+        if (+src) {
+            return ~src || setOptOutCookie();
+        }
+
+        script = doc.createElement(sscript);
+        firstScript = doc.getElementsByTagName(sscript)[0];
+        script.src = src;
+        callback && (script.onload = script.onerror = callback);
+        firstScript.parentNode.insertBefore(script, firstScript);
+    }
 
 function next() {
     Mobify.api || load(paths.shift() || -1, next);
