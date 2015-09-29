@@ -37,7 +37,7 @@ The Mobify Client is a command line tool for building and deploying Mobify.js pr
 
 ## Installation
 
-The Mobify Client requires Node >= 0.6.2. 
+The Mobify Client supports Node 0.6.2 to 0.12.x 
 
 ### Install from NPM
 
