@@ -33,7 +33,7 @@
 [submodule "vendor/mobify-js/1.1.3/base"]
 	path = vendor/mobify-js/1.1.3/base
 	url = git@github.com:mobify/mobifyjs.git
-	branch = 1.1.3-ajs-path
+	branch = 1.1.3
 [submodule "vendor/mobify-js/1.3.2/base"]
 	path = vendor/mobify-js/1.3.2/base
 	url = git@github.com:mobify/mobifyjs.git
