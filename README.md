@@ -84,12 +84,12 @@ File an issue!
 ### Publish
 ---------------------
 
-Make sure you modify the changelog.
+Make sure you modify the changelog and bump the version number.
 
-Note: you'll need to be an owner on NPM to publish.
-    
+**Note**: you'll need to be an owner on NPM to publish. Publishing requires the [`git-archive-all`](https://github.com/Kentzo/git-archive-all) Python package. On Mac systems, you can install this using [Homebrew](http://brew.sh/) and [this formula](http://brewformulas.org/GitArchiveAll).
+
     $ git status
     (ensure clean working directory)
     $ make archive
-    (creates archive mobify-client.v.x.x.x.tgz)
-    $ npm publish mobify-client.v.x.x.x.tgz
+    (creates archive mobify-client.x.x.x.tgz)
+    $ npm publish mobify-client.x.x.x.tgz
