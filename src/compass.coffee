@@ -6,8 +6,16 @@ COMPASS_PROC = if process.platform is 'win32'
 else
     "compass"
 
+# Setup compass plugin only the first time someone creates a server, not
+#   for ever server they create
+alreadyBound = false
+
 class CompassPlugin
     bindPreview: (preview_server) ->
+            if alreadyBound
+                return
+            else
+                alreadyBound = true
             console.log "Binding Compass Preview"
             
             ChildProcess.exec "#{COMPASS_PROC} clean", (err, stdout, stderr) ->
