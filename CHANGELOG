@@ -1,3 +1,5 @@
+v0.3.46 - Update package "connect" to keep the compatibility with Node 4
+
 v0.3.45 - Includes Mobify.js 1.1.4, fix an SEO issue that incorrectly display
           the mobify tag on SRP (Search Result Page)
 
